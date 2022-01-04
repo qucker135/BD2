@@ -18,7 +18,7 @@ public class Menu {
 	static JButton tv;
 
 	katalog katalog;
-	public void function(){
+	public void function(int idKlienta){
 		JFrame fM = new JFrame();
 
     	try {
@@ -59,41 +59,46 @@ public class Menu {
 	    laptopy.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("laptopy");
+        		katalog.function("laptopy", idKlienta);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    smartfony.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("smartfony");
+        		katalog.function("smartfony", idKlienta);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    gaming.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("gaming");
+        		katalog.function("gaming", idKlienta);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    up.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("up");
+        		katalog.function("up", idKlienta);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    tv.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("tv");
+        		katalog.function("tv", idKlienta);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    

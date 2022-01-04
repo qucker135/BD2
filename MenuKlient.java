@@ -11,7 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 public class MenuKlient {
-
+	
+    ImageIcon bBG = new ImageIcon("buttonBG.png");
+	
     static JButton katalog;
     static JButton koszyk;
     static JButton historia;
@@ -26,23 +28,25 @@ public class MenuKlient {
 
     Menu menu;
     ListaKlient lista;
-    koszyk koszykObj;
+    koszyk koszykObj = new koszyk(); //koszyk jest trzymany na ca³¹ sesjê
 	
-	public void function() {
+	public void function(int idKlienta) {
 		JFrame fMK = new JFrame();
 
 	    try {
 	    	
-	        fMK.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("menuKlient.jpg")))));
+	        fMK.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("menuV2.jpg")))));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
+	    
+	    
 	    barMenu = new JButton("m");
 	    barKatalog = new JButton("ka");
 	    barKoszyk = new JButton("ko");
 	    barWyloguj = new JButton("wy");
 	    barKontakt = new JButton("kon");
-
+	    
 	    barMenu.setBounds(860, 35, 40, 10);
 	    barKatalog.setBounds(935, 35, 40, 10);
 	    barKoszyk.setBounds(990, 35, 40, 10);
@@ -69,17 +73,21 @@ public class MenuKlient {
 	    barKatalog.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		menu = new Menu();
-        		menu.function();
+        		menu.function(idKlienta);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
+        		return;
+
 	        }
 	    });
 	    barKoszyk.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	koszykObj = new koszyk();
-	        	koszykObj.function();
+	        	
+	        	koszykObj.function(idKlienta);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
+        		return;
+
 	        }
 	    });
 	    barWyloguj.addActionListener(new ActionListener() {
@@ -88,6 +96,7 @@ public class MenuKlient {
 	            login.function();
 	            fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    barKontakt.addActionListener(new ActionListener() {
@@ -97,13 +106,28 @@ public class MenuKlient {
 	        }
 	    });
 	    
-	    
-	    katalog = new JButton("");
-	    koszyk = new JButton("");
-	    historia = new JButton("");
-	    wyloguj = new JButton("");
-	    kontakt = new JButton("");
+	    // new button
+	   // JButton beep;
+	  //  beep= new JButton(iconA);
+	   // beep.setRolloverIcon(iconA);
+	   // beep.setBounds(100,90,231,29); //231 29
+	   // beep.setBorderPainted(false);
 
+	   // fMK.add(beep);
+	    // end of new button
+	    
+	    
+	    katalog = new JButton("KATALOG", bBG);
+	    koszyk = new JButton("KOSZYK", bBG);
+	    historia = new JButton("HISTORIA", bBG);
+	    wyloguj = new JButton("WYLOGUJ", bBG);
+	    kontakt = new JButton("KONTAKT", bBG);
+	    
+	    katalog.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+	    koszyk.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+	    historia.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+	    wyloguj.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+	    kontakt.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    
 	    katalog.setBounds(470, 184, 240, 30);
 	    koszyk.setBounds(470, 233, 240, 30);
@@ -111,44 +135,48 @@ public class MenuKlient {
 	    wyloguj.setBounds(470, 331, 240, 30);
 	    kontakt.setBounds(470, 380, 240, 30);
 	    
-	    katalog.setOpaque(false);
+	   // katalog.setOpaque(false);	   
 	    katalog.setContentAreaFilled(false);
 	    katalog.setBorderPainted(false);
-	    koszyk.setOpaque(false);
+	   // koszyk.setOpaque(false);
 	    koszyk.setContentAreaFilled(false);
 	    koszyk.setBorderPainted(false);
-	    historia.setOpaque(false);
+	   // historia.setOpaque(false);
 	    historia.setContentAreaFilled(false);
 	    historia.setBorderPainted(false);
-	    wyloguj.setOpaque(false);
+	    //wyloguj.setOpaque(false);
 	    wyloguj.setContentAreaFilled(false);
 	    wyloguj.setBorderPainted(false);
-	    kontakt.setOpaque(false);
+	   // kontakt.setOpaque(false);
 	    kontakt.setContentAreaFilled(false);
 	    kontakt.setBorderPainted(false);
 	    
 	    katalog.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		menu = new Menu();
-        		menu.function();
+        		menu.function(idKlienta);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
+        		return;
+        		
 	        }
 	    });
 	    koszyk.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	koszykObj = new koszyk();
-	        	koszykObj.function();
+	        	koszykObj.function(idKlienta);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    historia.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		lista = new ListaKlient();
-        		lista.function();
+        		lista.function(idKlienta);
 	            fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    wyloguj.addActionListener(new ActionListener() {
@@ -157,6 +185,7 @@ public class MenuKlient {
 	            login.function();
 	            fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    kontakt.addActionListener(new ActionListener() {

@@ -20,10 +20,10 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
-//historia zamówieñ klienta
+//historia zamówieñ 
 
 
-public class ListaKlient {
+public class ListaPracownik {
 	
 	JTable table;
 	
@@ -65,7 +65,7 @@ public class ListaKlient {
 	    paragony = new JComboBox();
 	    
 	    /*
-	     * do comboboxa nale¿y wpisaæ wszystkie paragony danego klienta. 
+	     * do comboboxa nale¿y wpisaæ wszystkie paragony 
 	    */
 	    for(int i=0; i<amountOfPar; i++) {
 	    	paragony.addItem("myk");
@@ -111,7 +111,7 @@ public class ListaKlient {
 	    back.setBorderPainted(false);
 	    back.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	MenuKlient menu = new MenuKlient();
+	        	MenuPracownik menu = new MenuPracownik();
         		menu.function(idKlienta);
         		fLK.setVisible(false); //you can't see me!
         		fLK.dispose(); //Destroy the JFrame object

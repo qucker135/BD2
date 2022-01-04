@@ -7,6 +7,7 @@ public class MainClass {
         introLogin login = new introLogin();
         login.function();
         System.out.println("wracamy do maina");
+        return;
 
     }
 }

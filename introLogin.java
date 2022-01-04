@@ -29,6 +29,8 @@ public class introLogin {
     } catch (IOException e) {
         e.printStackTrace();
     }
+    
+
     JButton klient = new JButton("");
     klient.setBounds(350, 490, 290, 100);
     klient.setOpaque(false);
@@ -46,6 +48,7 @@ public class introLogin {
         	sl.run(1);
         	f.setVisible(false); //you can't see me!
         	f.dispose(); //Destroy the JFrame object
+        	return;
         }
     });
     pracownik.addActionListener(new ActionListener() {
@@ -53,6 +56,7 @@ public class introLogin {
         	sl.run(2);
         	f.setVisible(false); //you can't see me!
         	f.dispose(); //Destroy the JFrame object
+        	return;
         }
     });
     

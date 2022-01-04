@@ -1,7 +1,9 @@
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -9,11 +11,19 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+
 
 
 public class koszyk {
 
+    ImageIcon bBG = new ImageIcon("buttonBG.png");
+	
     static JButton usun;
     static JButton kup;
     static JButton back;
@@ -28,77 +38,137 @@ public class koszyk {
     static JTextField lokal;
     static JTextField tel;
     static JTextField email;
+    
+    JTable jt;
 
+    String data[][];
+    int amountOfData=20;
+    String prod= "test";
+    int il = -1;
+    int cena = -1;
+    
     MenuKlient menu;
+    
 
-	public void function() {
+	public void function(int idKlienta) {
 		JFrame fK = new JFrame();
 
 	    try {
 	    	
-	        fK.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("koszyk.jpg")))));
+	        fK.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("menuV2.jpg")))));
 	    } catch (IOException e) {
 	        e.printStackTrace();
+	    }    
+	    
+	    String column[]={"Produkt","Iloœæ","Cena"};      
+	    DefaultTableModel dtm=new DefaultTableModel(column,0);
+
+	    JTable jt=new JTable(dtm);    
+	    
+	    ////////////////////////////////////////////////
+	    //dane do wypisania w tabeli
+	    //Do zmiennej amount of data wpisaæ iloœæ produktów
+	    //coœ mówiliœmy o tym, ¿eby by³y domyœlne wartoœci, to w pole imie, imie2 itd. trzeba by wstawiæ domyœlny tekst. zostawiam do przemyœlenia
+	    //w idKlienta jest id klienta, który teraz pracuje na aplikacji
+	    //TODO BM
+
+	    String[] item={"A","B","C","D"};
+	    dtm.addRow(item);
+
+	    for(int i=0; i<amountOfData; i++) {
+	    	//tutaj trzeba wklepaæ w zmienne te 3 co s¹ poni¿ej nazwê produktu, iloœæ do kupienia i cenê
+	        Object[] row = { prod, il, cena };
+		    dtm.addRow(row);
+
 	    }
-	    usun = new JButton("");
-	    kup = new JButton("");
-	    back = new JButton("");
+	    
+
+	    //////////////////////////////////////
+	    jt.setBounds(0,0,200,100);      
+	    jt.setBackground(Color.blue);
+	    JScrollPane sp=new JScrollPane(jt);    
+	    
+	    JPanel p = new JPanel();
+	    p.setBounds(210, 50, 600, 425);
+	    p.setBackground(Color.white);
+	    p.add(sp);
+	    
+	    
+	    
+	    
+	    
+	    usun = new JButton("USUÑ", bBG);
+	    kup = new JButton("KUP", bBG);
+	    back = new JButton("POWRÓT", bBG);
+
+	    usun.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+	    kup.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+	    back.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+	    
+	    usun.setBounds(410, 500, 240, 30);
+	    kup.setBounds(5, 500, 240, 30);
+	    back.setBounds(5, 50, 240, 30);
 
 	    
-	    usun.setBounds(340, 220, 100, 20);
-	    kup.setBounds(580, 170, 120, 20);
-	    back.setBounds(20, 60, 70, 10);
+	    imie = new JTextField("imiê");
+	    imie2 = new JTextField("drugie imiê");
+	    nazwisko = new JTextField("nazwisko");
+	    kod = new JTextField("kod pocztowy");
+	    miasto = new JTextField("miasto");
+	    ulica = new JTextField("ulica");
+	    lokal = new JTextField("numer lokalu");
+	    tel = new JTextField("telefon");
+	    email = new JTextField("email");
 
 	    
-	    imie = new JTextField();
-	    imie2 = new JTextField();
-	    nazwisko = new JTextField();
-	    kod = new JTextField();
-	    miasto = new JTextField();
-	    ulica = new JTextField();
-	    lokal = new JTextField();
-	    tel = new JTextField();
-	    email = new JTextField();
+	    imie.setBounds(10, 280, 200, 20);
+	    imie2.setBounds(10, 300, 200, 20);
+	    nazwisko.setBounds(10, 320, 200, 20);
+	    kod.setBounds(10, 340, 200, 20);
+	    miasto.setBounds(10, 360, 200, 20);
+	    ulica.setBounds(10, 380, 200, 20);
+	    lokal.setBounds(10, 400, 200, 20);
+	    tel.setBounds(10, 420, 200, 20);
+	    email.setBounds(10, 440, 200, 20);
 
-	    
-	    imie.setBounds(210, 280, 200, 10);
-	    imie2.setBounds(210, 300, 200, 10);
-	    nazwisko.setBounds(210, 320, 200, 10);
-	    kod.setBounds(210, 340, 200, 10);
-	    miasto.setBounds(210, 360, 200, 10);
-	    ulica.setBounds(210, 380, 200, 10);
-	    lokal.setBounds(210, 400, 200, 10);
-	    tel.setBounds(210, 420, 200, 10);
-	    email.setBounds(210, 440, 200, 10);
-
-	    usun.setOpaque(false);
 	    usun.setContentAreaFilled(false);
 	    usun.setBorderPainted(false);
-	    kup.setOpaque(false);
 	    kup.setContentAreaFilled(false);
 	    kup.setBorderPainted(false);
-	    back.setOpaque(false);
 	    back.setContentAreaFilled(false);
 	    back.setBorderPainted(false);
 	    
 	    usun.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-        		JOptionPane.showMessageDialog(fK, "Eggs are not supposed to be green.");
-
+	        	((DefaultTableModel)jt.getModel()).removeRow(jt.getSelectedRow());
+	        	//Twoja w tym g³owa, ¿eby w tym miejscu by³ kod, który usuwa element z tabeli
+	        	//TODO BM
 	        }
 	    });
 	    kup.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-        		JOptionPane.showMessageDialog(fK, "Eggs are not supposed to be green.");
-
+	        	
+	        	imie.getText();
+	        	imie2.getText();
+	     	    nazwisko.getText();
+	     	    kod.getText();
+	     	    miasto.getText();
+	     	    ulica.getText();
+	     	    lokal.getText();
+	     	    tel.getText();
+	     	    email.getText();
+	        	//powy¿ej czyta dane z pól tekstowych, zajmij sie tym, ¿eby zosta³y one odpowiednio 
+	        	//przetworzone przez bazê
+	        	//TODO BM
 	        }
 	    });
 	    back.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		menu = new MenuKlient();
-        		menu.function();
+        		menu.function(idKlienta);
         		fK.setVisible(false); //you can't see me!
         		fK.dispose(); //Destroy the JFrame object
+        		return;
 	        }
 	    });
 	    
@@ -116,7 +186,11 @@ public class koszyk {
 	    fK.add(kup);
 	    fK.add(back);
 	    
+	    fK.add(p); 
+
+	    
 	    fK.pack();
 	    fK.setVisible(true);
 	}
+
 }

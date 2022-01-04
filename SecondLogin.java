@@ -32,6 +32,13 @@ public class SecondLogin {
     MenuKlient MK;
     MenuPracownik MP;
     
+    
+    private int idKlienta=-1;
+    private int idPracownika=-1;
+    
+    private String loginData;
+    private String passwdData;
+    
 	public void run(int whoIsThere){
 		JFrame fSL = new JFrame();
 
@@ -56,23 +63,28 @@ public class SecondLogin {
 	    
 	    zaloguj.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
+	        	loginData = login.getText();
+	        	passwdData = passwd.getText();
 	        	/*
 	        	 * Tutaj trzeba dodaæ kod, który bêdzie sprawdza³ passy z baz¹ danych
 	        	 * pracownik, albo klient po zmiennej whoIsThere
+	        	 * Nale¿y te¿ zapewniæ, aby znalezione id klient / pracownik zosta³o przypisane do odpowiedniej zmiennej
 	        	 * 
 	        	 */
 	        	if(whoIsThere==1) {
 	        		MK = new MenuKlient();
 
-	        		MK.function();
+	        		MK.function(idKlienta);
 	        		fSL.setVisible(false); //you can't see me!
 	        		fSL.dispose(); //Destroy the JFrame object
+	        		return;
 	        	}
 	        	if(whoIsThere==2) {
 	        		MP=new MenuPracownik();
-	        		MP.function();
+	        		MP.function(idPracownika);
 	        		fSL.setVisible(false); //you can't see me!
 	        		fSL.dispose(); //Destroy the JFrame object
+	        		return;
 	        	}
 	        	
 	        }
