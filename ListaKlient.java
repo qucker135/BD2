@@ -3,6 +3,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
@@ -19,8 +22,10 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import static java.lang.Integer.parseInt;
 
-//historia zamówieñ klienta
+
+//historia zamï¿½wieï¿½ klienta
 
 
 public class ListaKlient {
@@ -44,10 +49,12 @@ public class ListaKlient {
 	String prod2 = "zmiana";
 	int il2 =99;
 	int cena2 = 981;
-	String numerZBD;
 	
-	public void function(int idKlienta) {
+	public void function(String PESEL) {
 		JFrame fLK = new JFrame();
+
+		//global connection to db
+		Connection connection = connection = DbConnector.connect();
 
 	    try {
 	    	
@@ -57,36 +64,38 @@ public class ListaKlient {
 	    }
 	    
 	    System.out.println("tralalala");
-	    String column[]={"Produkt","Iloœæ","Cena"};         
+	    String column[]={"Produkt","nrSeryjny","Cena"};
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);    
 	    
 	    paragony = new JComboBox();
-	    
-	    /*
-	     * do comboboxa nale¿y wpisaæ wszystkie paragony danego klienta. 
-	    */
-	    for(int i=0; i<amountOfPar; i++) {
-	    	paragony.addItem("myk");
-	    }
-	    
-	    
-	    ////////////////////////////////////////////////
-	    //dane do wypisania w tabeli
-	    //wszystko podobnie jak w koszyku
-	    //TODO BM
 
-	    String[] item={"A","B","C","D"};
-	    dtm.addRow(item);
-    	paragony.getSelectedItem();
+		try{
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT nrParagonu FROM Transakcja WHERE KlientPESEL="+PESEL+";");
+			while(resultSet.next()) {
+				String nrParagonu = resultSet.getString("nrParagonu");
+				paragony.addItem(nrParagonu);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 
-	    for(int i=0; i<amountOfData; i++) {
-	    	//tutaj trzeba wklepaæ w zmienne te 3 co s¹ poni¿ej nazwê produktu, iloœæ do kupienia i cenê
-	        Object[] row = { prod, il, cena };
-		    dtm.addRow(row);
+		//TODO - Franciszek & Nastya - przykladowe dane
 
-	    } 
+		try{
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT NrEgzemplarzaWTransakcji.nrSeryjny AS nrSeryjny, NrEgzemplarzaWTransakcji.finalnaCena AS Cena, Produkt.Nazwa AS Produkt FROM NrEgzemplarzaWTransakcji, Egzemplarz, Produkt WHERE Produkt.IDproduktu=Egzemplarz.ProduktIDproduktu AND NrEgzemplarzaWTransakcji.EgzemplarzIDserii=Egzemplarz.nrSeryjny AND NrEgzemplarzaWTransakcji.nrParagonu = "+(String)paragony.getSelectedItem()+";");
+			while(resultSet.next()) {
+				String Produkt = resultSet.getString("Produkt");
+				String nrParagonu = resultSet.getString("nrSeryjny");
+				String Cena = resultSet.getString("Cena");
+				String[] row = {Produkt, nrParagonu, Cena};
+				dtm.addRow(row);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+
 	    jt.setBounds(0,0,200,100);      
 	    jt.setBackground(Color.blue);
 	    JScrollPane sp=new JScrollPane(jt);    
@@ -95,16 +104,8 @@ public class ListaKlient {
 	    p.setBounds(0, 100, 500, 425);
 	    p.setBackground(Color.white);
 	    p.add(sp);
-	    
-	    
-	    
-	    //TODO BM
-	    //ustaw numerZBD na numer  1 zamówienia danego klienta
-	    //numerZBD = ...
-	    nrZam = new JTextField();
-	    nrZam.setText(numerZBD);
-	    
-	    back = new JButton("POWRÓT", bBG);
+
+	    back = new JButton("POWRï¿½T", bBG);
 	    back.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    back.setBounds(500, 400, 240, 30);
 	    back.setContentAreaFilled(false);
@@ -112,7 +113,7 @@ public class ListaKlient {
 	    back.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	MenuKlient menu = new MenuKlient();
-        		menu.function(idKlienta);
+        		menu.function(PESEL);
         		fLK.setVisible(false); //you can't see me!
         		fLK.dispose(); //Destroy the JFrame object
         		return;
@@ -122,20 +123,24 @@ public class ListaKlient {
 	    
 	    paragony.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	paragony.getSelectedItem();
 	        	dtm.getDataVector().removeAllElements();
-	    	    for(int i=0; i<amountOfData; i++) {
-	    	    	//tutaj trzeba wklepaæ w zmienne te 3 co s¹ poni¿ej nazwê produktu, iloœæ do kupienia i cenê
-	    	        Object[] row = { prod2, il2, cena2 };
-	    		    dtm.addRow(row);
-
-	    	    } 
+				try{
+					ResultSet resultSet = DbConnector.executeSelectQuery("SELECT NrEgzemplarzaWTransakcji.nrSeryjny AS nrSeryjny, NrEgzemplarzaWTransakcji.finalnaCena AS Cena, Produkt.Nazwa AS Produkt FROM NrEgzemplarzaWTransakcji, Egzemplarz, Produkt WHERE Produkt.IDproduktu=Egzemplarz.ProduktIDproduktu AND NrEgzemplarzaWTransakcji.EgzemplarzIDserii=Egzemplarz.nrSeryjny AND NrEgzemplarzaWTransakcji.nrParagonu = "+(String)paragony.getSelectedItem()+";");
+					while(resultSet.next()) {
+						String Produkt = resultSet.getString("Produkt");
+						String nrParagonu = resultSet.getString("nrSeryjny");
+						String Cena = resultSet.getString("Cena");
+						String[] row = {Produkt, nrParagonu, Cena};
+						dtm.addRow(row);
+					}
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
 	        }
 	    });
 	    
 	    fLK.add(paragony);
 	    fLK.add(back);
-	    fLK.add(nrZam);
 	    fLK.add(p);
 	    fLK.pack();
 	    fLK.setVisible(true);

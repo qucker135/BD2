@@ -20,7 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
-//historia zamówieñ 
+//historia zamï¿½wieï¿½ 
 
 
 public class ListaPracownik {
@@ -57,7 +57,7 @@ public class ListaPracownik {
 	    }
 	    
 	    System.out.println("tralalala");
-	    String column[]={"Produkt","Iloœæ","Cena"};         
+	    String column[]={"Produkt","Iloï¿½ï¿½","Cena"};         
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);    
@@ -65,7 +65,7 @@ public class ListaPracownik {
 	    paragony = new JComboBox();
 	    
 	    /*
-	     * do comboboxa nale¿y wpisaæ wszystkie paragony 
+	     * do comboboxa naleï¿½y wpisaï¿½ wszystkie paragony 
 	    */
 	    for(int i=0; i<amountOfPar; i++) {
 	    	paragony.addItem("myk");
@@ -79,10 +79,10 @@ public class ListaPracownik {
 
 	    String[] item={"A","B","C","D"};
 	    dtm.addRow(item);
-    	paragony.getSelectedItem();
+    	paragony.getSelectedItem(); //nrParagonu
 
 	    for(int i=0; i<amountOfData; i++) {
-	    	//tutaj trzeba wklepaæ w zmienne te 3 co s¹ poni¿ej nazwê produktu, iloœæ do kupienia i cenê
+	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½
 	        Object[] row = { prod, il, cena };
 		    dtm.addRow(row);
 
@@ -99,12 +99,12 @@ public class ListaPracownik {
 	    
 	    
 	    //TODO BM
-	    //ustaw numerZBD na numer  1 zamówienia danego klienta
+	    //ustaw numerZBD na numer  1 zamï¿½wienia danego klienta
 	    //numerZBD = ...
 	    nrZam = new JTextField();
 	    nrZam.setText(numerZBD);
 	    
-	    back = new JButton("POWRÓT", bBG);
+	    back = new JButton("POWRï¿½T", bBG);
 	    back.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    back.setBounds(500, 400, 240, 30);
 	    back.setContentAreaFilled(false);
@@ -125,7 +125,7 @@ public class ListaPracownik {
 	        	paragony.getSelectedItem();
 	        	dtm.getDataVector().removeAllElements();
 	    	    for(int i=0; i<amountOfData; i++) {
-	    	    	//tutaj trzeba wklepaæ w zmienne te 3 co s¹ poni¿ej nazwê produktu, iloœæ do kupienia i cenê
+	    	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½
 	    	        Object[] row = { prod2, il2, cena2 };
 	    		    dtm.addRow(row);
 

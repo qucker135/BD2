@@ -3,6 +3,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -20,6 +24,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import static java.lang.Integer.parseInt;
+
 
 public class katalog {
 	
@@ -32,18 +38,21 @@ public class katalog {
     JButton back;
     JSpinner spinner;
     
-    int amountOfData=100;
-    String prod=" ";
-    int prom=-1;
-    int cena=-1;
+    //int amountOfData=100;
+    //String prod=" ";
+	//int cena=-1;
+    //int prom=-1;
+
     
     int min=0;
     int max=10;
 	
-	public void function(String name, int idKlienta) {
+	public void function(Integer idKategorii, String PESEL) {
 		JFrame fKA = new JFrame();
 
-			
+		//global connection to db
+		Connection connection = connection = DbConnector.connect();
+
 	    try {
 	    	
 	        fKA.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("menuV2.jpg")))));
@@ -53,29 +62,43 @@ public class katalog {
 	    
 	    kategoria = new JTextField();
 	    kategoria.setBounds(300, 30, 200, 70);
+
+		String name = "";
+		try{
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT Nazwa FROM Kategoria WHERE IDKategorii="+idKategorii.toString()+";");
+			resultSet.next();
+			name = resultSet.getString("Nazwa");
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 	    kategoria.setText(name);
 	    
 	    kategoria.setOpaque(false);
 	    
-	    String column[]={"Nazwa", "Cena", "Promocja", "Dostêpne sztuki"};         
+	    String column[]={"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki"};         
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);    
-	    
+
+		//name - nazwaKategorii
 	    ////////////////////////////////////////////////
 	    //dane do wypisania w tabeli
 	    //wszystko podobnie jak w koszyku
-	    //TODO BM
+	    //DONE BM
+		try{
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT Produkt.Nazwa AS Nazwa, Produkt.Cena AS Cena, Produkt.DostepneSztuki AS Sztuki, Promocja.Wartosc AS Promocja FROM Produkt, Promocja, PromocjeNaProdukty WHERE Promocja.IDPromocji=PromocjeNaProdukty.PromocjaIDPromocji AND Produkt.IDProduktu=PromocjeNaProdukty.ProduktIDProduktu AND KategoriaIDKategorii="+idKategorii+";");
+			while(resultSet.next()){
+				String nazwa = resultSet.getString("Nazwa");
+				String cena = resultSet.getString("Cena");
+				String sztuki = resultSet.getString("Sztuki");
+				String promocja = resultSet.getString("Promocja");
+				String[] row = {nazwa, cena, promocja, sztuki};
+				dtm.addRow(row);
+			}
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
 
-	    String[] item={"A","B","C","D"};
-	    dtm.addRow(item);
-
-	    for(int i=0; i<amountOfData; i++) {
-	    	//tutaj trzeba wklepaæ w zmienne te 3 co s¹ poni¿ej nazwê produktu, iloœæ do kupienia i cenê
-	        Object[] row = { prod, prom, cena, "9" };
-		    dtm.addRow(row);
-
-	    } 
 	    jt.setBounds(0,0,200,100);      
 	    jt.setBackground(Color.blue);
 	    JScrollPane sp=new JScrollPane(jt);    
@@ -84,13 +107,22 @@ public class katalog {
 	    p.setBounds(0, 100, 500, 425);
 	    p.setBackground(Color.white);
 	    p.add(sp);
-	    
-	    
-	    //TODO BM
-	    // przypisz wartoœciom min i max odpowiednie wartoœci. minimum produktów, które mo¿na kupiæ to 1, maksimum to iloœæ dostêpnych produktów
-	    //min = 1;
-	    //max = podepnij do bazy
-	    SpinnerModel value = new SpinnerNumberModel(0, min,max,1);
+
+	    // BM - DONE
+	    // przypisz wartoï¿½ciom min i max odpowiednie wartoï¿½ci. minimum produktï¿½w, ktï¿½re moï¿½na kupiï¿½ to 1, maksimum to iloï¿½ï¿½ dostï¿½pnych produktï¿½w
+	    min = 0;
+	    max = 10;//podepnij do bazy
+
+		try{
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT COUNT(*) AS Liczba FROM Produkt;");
+			resultSet.next();
+			String maxAsText = resultSet.getString("Liczba");
+			max = parseInt(maxAsText);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+
+		SpinnerModel value = new SpinnerNumberModel(0, min,max,1);
 	    spinner = new JSpinner(value); 
 	    spinner.setBounds(500, 150, 40, 40);
 	    
@@ -103,12 +135,12 @@ public class katalog {
 	        public void actionPerformed(ActionEvent e) {
         		jt.getSelectedRow();
         		spinner.getValue();
-        		//TODO BM
-        		//dodanie zaznaczonego produktu do koszyka w wartoœci spinner
+        		//TODO Franciszek
+        		//dodanie zaznaczonego produktu do koszyka w wartoï¿½ci spinner
 	        }
 	    });
 	    
-	    back = new JButton("POWRÓT", bBG);
+	    back = new JButton("POWRï¿½T", bBG);
 	    back.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    back.setBounds(500, 400, 240, 30);
 	    back.setContentAreaFilled(false);
@@ -116,7 +148,7 @@ public class katalog {
 	    back.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	MenuKlient menu = new MenuKlient();
-        		menu.function(idKlienta);
+        		menu.function(PESEL);
         		fKA.setVisible(false); //you can't see me!
         		fKA.dispose(); //Destroy the JFrame object
         		return;

@@ -50,7 +50,7 @@ public class koszyk {
     MenuKlient menu;
     
 
-	public void function(int idKlienta) {
+	public void function(String PESEL) {
 		JFrame fK = new JFrame();
 
 	    try {
@@ -60,23 +60,24 @@ public class koszyk {
 	        e.printStackTrace();
 	    }    
 	    
-	    String column[]={"Produkt","Iloœæ","Cena"};      
+	    String column[]={"Produkt","Iloï¿½ï¿½","Cena"};      
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);    
 	    
 	    ////////////////////////////////////////////////
 	    //dane do wypisania w tabeli
-	    //Do zmiennej amount of data wpisaæ iloœæ produktów
-	    //coœ mówiliœmy o tym, ¿eby by³y domyœlne wartoœci, to w pole imie, imie2 itd. trzeba by wstawiæ domyœlny tekst. zostawiam do przemyœlenia
-	    //w idKlienta jest id klienta, który teraz pracuje na aplikacji
-	    //TODO BM
+	    //Do zmiennej amount of data wpisaï¿½ iloï¿½ï¿½ produktï¿½w
+	    //coï¿½ mï¿½wiliï¿½my o tym, ï¿½eby byï¿½y domyï¿½lne wartoï¿½ci, to w pole imie, imie2 itd. trzeba by wstawiï¿½ domyï¿½lny tekst. zostawiam do przemyï¿½lenia
+	    //w idKlienta jest id klienta, ktï¿½ry teraz pracuje na aplikacji
+	    //TODO BM + Franciszek
+		//"SELECT "
 
 	    String[] item={"A","B","C","D"};
 	    dtm.addRow(item);
 
 	    for(int i=0; i<amountOfData; i++) {
-	    	//tutaj trzeba wklepaæ w zmienne te 3 co s¹ poni¿ej nazwê produktu, iloœæ do kupienia i cenê
+	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½
 	        Object[] row = { prod, il, cena };
 		    dtm.addRow(row);
 
@@ -97,9 +98,9 @@ public class koszyk {
 	    
 	    
 	    
-	    usun = new JButton("USUÑ", bBG);
+	    usun = new JButton("USUï¿½", bBG);
 	    kup = new JButton("KUP", bBG);
-	    back = new JButton("POWRÓT", bBG);
+	    back = new JButton("POWRï¿½T", bBG);
 
 	    usun.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    kup.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -110,8 +111,8 @@ public class koszyk {
 	    back.setBounds(5, 50, 240, 30);
 
 	    
-	    imie = new JTextField("imiê");
-	    imie2 = new JTextField("drugie imiê");
+	    imie = new JTextField("imiï¿½");
+	    imie2 = new JTextField("drugie imiï¿½");
 	    nazwisko = new JTextField("nazwisko");
 	    kod = new JTextField("kod pocztowy");
 	    miasto = new JTextField("miasto");
@@ -141,8 +142,8 @@ public class koszyk {
 	    usun.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	((DefaultTableModel)jt.getModel()).removeRow(jt.getSelectedRow());
-	        	//Twoja w tym g³owa, ¿eby w tym miejscu by³ kod, który usuwa element z tabeli
-	        	//TODO BM
+	        	//Twoja w tym gï¿½owa, ï¿½eby w tym miejscu byï¿½ kod, ktï¿½ry usuwa element z tabeli
+	        	//TODO BM + Franciszek
 	        }
 	    });
 	    kup.addActionListener(new ActionListener() {
@@ -157,15 +158,15 @@ public class koszyk {
 	     	    lokal.getText();
 	     	    tel.getText();
 	     	    email.getText();
-	        	//powy¿ej czyta dane z pól tekstowych, zajmij sie tym, ¿eby zosta³y one odpowiednio 
-	        	//przetworzone przez bazê
-	        	//TODO BM
+	        	//powyï¿½ej czyta dane z pï¿½l tekstowych, zajmij sie tym, ï¿½eby zostaï¿½y one odpowiednio 
+	        	//przetworzone przez bazï¿½
+	        	//TODO BM + Franciszek
 	        }
 	    });
 	    back.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		menu = new MenuKlient();
-        		menu.function(idKlienta);
+        		menu.function(PESEL);
         		fK.setVisible(false); //you can't see me!
         		fK.dispose(); //Destroy the JFrame object
         		return;

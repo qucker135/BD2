@@ -28,9 +28,9 @@ public class MenuKlient {
 
     Menu menu;
     ListaKlient lista;
-    koszyk koszykObj = new koszyk(); //koszyk jest trzymany na ca³¹ sesjê
+    koszyk koszykObj = new koszyk(); //koszyk jest trzymany na caï¿½ï¿½ sesjï¿½
 	
-	public void function(int idKlienta) {
+	public void function(String PESEL) {
 		JFrame fMK = new JFrame();
 
 	    try {
@@ -73,7 +73,7 @@ public class MenuKlient {
 	    barKatalog.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		menu = new Menu();
-        		menu.function(idKlienta);
+        		menu.function(PESEL);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;
@@ -83,7 +83,7 @@ public class MenuKlient {
 	    barKoszyk.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	
-	        	koszykObj.function(idKlienta);
+	        	koszykObj.function(PESEL);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;
@@ -154,7 +154,7 @@ public class MenuKlient {
 	    katalog.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		menu = new Menu();
-        		menu.function(idKlienta);
+        		menu.function(PESEL);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;
@@ -164,7 +164,7 @@ public class MenuKlient {
 	    koszyk.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	koszykObj = new koszyk();
-	        	koszykObj.function(idKlienta);
+	        	koszykObj.function(PESEL);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;
@@ -173,7 +173,7 @@ public class MenuKlient {
 	    historia.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		lista = new ListaKlient();
-        		lista.function(idKlienta);
+        		lista.function(PESEL);
 	            fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;

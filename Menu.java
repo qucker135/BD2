@@ -18,7 +18,7 @@ public class Menu {
 	static JButton tv;
 
 	katalog katalog;
-	public void function(int idKlienta){
+	public void function(String PESEL){
 		JFrame fM = new JFrame();
 
     	try {
@@ -59,7 +59,7 @@ public class Menu {
 	    laptopy.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("laptopy", idKlienta);
+        		katalog.function(2, PESEL);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;
@@ -68,7 +68,7 @@ public class Menu {
 	    smartfony.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("smartfony", idKlienta);
+        		katalog.function(3, PESEL);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;
@@ -77,7 +77,7 @@ public class Menu {
 	    gaming.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("gaming", idKlienta);
+        		katalog.function(1, PESEL);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;
@@ -86,7 +86,7 @@ public class Menu {
 	    up.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("up", idKlienta);
+        		katalog.function(4, PESEL);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;
@@ -95,7 +95,7 @@ public class Menu {
 	    tv.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function("tv", idKlienta);
+        		katalog.function(5, PESEL);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;
