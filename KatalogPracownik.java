@@ -26,6 +26,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import static java.lang.Integer.parseInt;
+
 
 public class KatalogPracownik {
 	
@@ -75,22 +77,22 @@ public class KatalogPracownik {
 	    
 	    kategoria.setOpaque(false);
 	    
-	    String column[]={"Produkt", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria", "idProduktu"};
+	    String column[]={"idProduktu", "Produkt", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"};
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);
 
-	    //TODO BM select jeszcze id produktu
 		try{
-			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT Produkt.Nazwa AS Produkt, Produkt.Cena, Produkt.DostepneSztuki, Kategoria.Nazwa AS Kategoria, Promocja.Wartosc AS Promocja FROM Produkt, Kategoria, Promocja, PromocjeNaProdukty WHERE Produkt.KategoriaIDkategorii=Kategoria.IDkategorii AND Produkt.IDproduktu=PromocjeNaProdukty.ProduktIDproduktu AND Promocja.IDPromocji=PromocjeNaProdukty.PromocjaIDpromocji;");
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT Produkt.IDproduktu AS IDproduktu, Produkt.Nazwa AS Produkt, Produkt.Cena, Produkt.DostepneSztuki, Kategoria.Nazwa AS Kategoria, Promocja.Wartosc AS Promocja FROM Produkt, Kategoria, Promocja, PromocjeNaProdukty WHERE Produkt.KategoriaIDkategorii=Kategoria.IDkategorii AND Produkt.IDproduktu=PromocjeNaProdukty.ProduktIDproduktu AND Promocja.IDPromocji=PromocjeNaProdukty.PromocjaIDpromocji;");
 			while(resultSet.next()) {
+				String IDproduktu = resultSet.getString("IDproduktu");
 				String Produkt = resultSet.getString("Produkt");
 				String Cena = resultSet.getString("Cena");
 				String Promocja = resultSet.getString("Promocja");
 				String Sztuki = resultSet.getString("DostepneSztuki");
 				String Kategoria = resultSet.getString("Kategoria");
-				//dodaæ id produktu
-				String[] row = {Produkt, Cena, Promocja, Sztuki, Kategoria};
+
+				String[] row = {IDproduktu ,Produkt, Cena, Promocja, Sztuki, Kategoria};
 				dtm.addRow(row);
 			}
 		}catch(SQLException e){
@@ -105,12 +107,19 @@ public class KatalogPracownik {
 	    p.setBounds(0, 100, 500, 425);
 	    p.setBackground(Color.white);
 	    p.add(sp);
-	    
-	    
-	    //TODO BM
-	    // przypisz wartoï¿½ciom min i max odpowiednie wartoï¿½ci. minimum produktï¿½w, ktï¿½re moï¿½na kupiï¿½ to 1, maksimum to iloï¿½ï¿½ dostï¿½pnych produktï¿½w
-	    //min = 1;
-	    //max = podepnij do bazy
+
+	    min = 0;
+		max = 10;//podepnij do bazy // TODO Franciszek zabezpieczenie
+
+		try{
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT COUNT(*) AS Liczba FROM Produkt;");
+			resultSet.next();
+			String maxAsText = resultSet.getString("Liczba");
+			max = parseInt(maxAsText);
+		}catch(SQLException e){
+			e.printStackTrace();
+		}
+
 	    SpinnerModel value = new SpinnerNumberModel(0, min,max,1);
 	    spinner = new JSpinner(value); 
 	    spinner.setBounds(500, 150, 40, 40);
@@ -165,13 +174,19 @@ public class KatalogPracownik {
 	            }
 	            System.out.print(cost);
 	            String op=JOptionPane.showInputDialog(tmp, "Zmiana Opisu");
-	            JComboBox kat = new JComboBox();
-	            int amountOfKat=10;
-	            //TODO BM Select * kategorie i w pêtli wpisujemy 
-	            for(int i=0; i<amountOfKat; i++) {
-	            	kat.addItem("kategoria"+i);
-	            }
-	            
+
+
+				JComboBox kat = new JComboBox();
+				try{
+					ResultSet resultSet = DbConnector.executeSelectQuery("SELECT Nazwa FROM Kategoria ORDER BY IDkategorii ASC LIMIT 5;");
+					while(resultSet.next()){
+						String Nazwa = resultSet.getString("Nazwa");
+						kat.addItem(Nazwa);
+					}
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
+
 	            String[] options = { "OK"};
 
 	            JOptionPane.showOptionDialog(null, kat, "Zmiana Kategorii",
@@ -181,11 +196,18 @@ public class KatalogPracownik {
 	            System.out.print(kategoria);
 
 	            JComboBox prom = new JComboBox();
-	            int amountOfProm =10;
-	            //TODO BM w pêtli wczytujemy wszhystkie promocje. Select all promocje i w pêtli dodajemy
-	            for(int i=0; i<amountOfProm; i++) {
-	            	prom.addItem("prom"+i);
-	            }
+
+				try{
+					ResultSet resultSet = DbConnector.executeSelectQuery("SELECT IDPromocji, Nazwa FROM Promocja;");
+					while(resultSet.next()){
+						String IDpromocja = resultSet.getString("IDPromocji");
+						String Nazwa = resultSet.getString("Nazwa");
+						prom.addItem(IDpromocja+";"+Nazwa);
+					}
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
+
 	            JOptionPane.showOptionDialog(null, prom, "Zmiana Promocji",
 	                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,
 	                    options[0]);
@@ -194,7 +216,7 @@ public class KatalogPracownik {
 	            
 	            //"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
 	            //TODO BM edycja danych z tabeli produkty
-	            jt.getModel().getValueAt(jt.getSelectedRow(), 6).toString(); // idProduktu który mamy zmienniæ //mo¿e byæ 5, jeœli liczy od 0
+	            jt.getModel().getValueAt(jt.getSelectedRow(), 5).toString(); // idProduktu ktï¿½ry mamy zmienniï¿½ //moï¿½e byï¿½ 5, jeï¿½li liczy od 0
 	            dtm.removeRow(jt.getSelectedRow());
 		        Object[] row = { name, cost, promocja, am, kategoria  };
 			    dtm.addRow(row);
@@ -209,8 +231,24 @@ public class KatalogPracownik {
 	        public void actionPerformed(ActionEvent e) {
 	        	((DefaultTableModel)jt.getModel()).removeRow(jt.getSelectedRow());
 	        	//TODO BM usuwamy wybrany produkt po id
-	            jt.getModel().getValueAt(jt.getSelectedRow(), 6).toString(); // idProduktu który mamy usun¹æ //mo¿e byæ 5, jeœli liczy od 0
+				String idproduktu = jt.getModel().getValueAt(jt.getSelectedRow(), 0).toString();// idProduktu ktï¿½ry mamy usunï¿½ï¿½ //moï¿½e byï¿½ 5, jeï¿½li liczy od 0
 
+				System.out.println(idproduktu);
+
+				//try{
+					DbConnector.executeQuery("DELETE FROM PromocjeNaProdukty WHERE ProduktIDproduktu = "+idproduktu+";");
+					DbConnector.executeQuery("DELETE FROM Ocena WHERE ProduktIDproduktu = "+idproduktu+";");
+					DbConnector.executeQuery("DELETE FROM Egzemplarz WHERE czyDostepne = 1 AND ProduktIDproduktu = "+idproduktu+";");
+					DbConnector.executeQuery("DELETE FROM Produkt WHERE IDproduktu = "+idproduktu+";");
+					/*
+					while(resultSet.next()){
+						String Nazwa = resultSet.getString("Nazwa");
+						//kat.addItem(Nazwa);
+					}
+					*/
+				//}catch(SQLException e2){
+				//	e2.printStackTrace();
+				//}
 	        }
 	    });
 	    dodaj = new JButton("DODAJ PRODUKT", bBG);
@@ -243,13 +281,18 @@ public class KatalogPracownik {
 	            }
 	            System.out.print(cost);
 	            String op=JOptionPane.showInputDialog(tmp,"Wpisz opis");
-	            JComboBox kat = new JComboBox();
-	            int amountOfKat=10;
-	            //TODO BM Select * kategorie i w pêtli wpisujemy 
 
-	            for(int i=0; i<amountOfKat; i++) {
-	            	kat.addItem("myk"+i);
-	            }
+				JComboBox kat = new JComboBox();
+				try{
+					ResultSet resultSet = DbConnector.executeSelectQuery("SELECT Nazwa FROM Kategoria ORDER BY IDkategorii ASC LIMIT 5;");
+					while(resultSet.next()){
+						String Nazwa = resultSet.getString("Nazwa");
+						kat.addItem(Nazwa);
+					}
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
+
 	            
 	            String[] options = { "OK"};
 
@@ -260,12 +303,18 @@ public class KatalogPracownik {
 	            System.out.print(kategoria);
 
 	            JComboBox prom = new JComboBox();
-	            int amountOfProm =10;
-	            //TODO BM w pêtli wczytujemy wszhystkie promocje. Select all promocje i w pêtli dodajemy
 
-	            for(int i=0; i<amountOfProm; i++) {
-	            	prom.addItem("prom"+i);
-	            }
+				try{
+					ResultSet resultSet = DbConnector.executeSelectQuery("SELECT IDPromocji, Nazwa FROM Promocja;");
+					while(resultSet.next()){
+						String IDpromocja = resultSet.getString("IDPromocji");
+						String Nazwa = resultSet.getString("Nazwa");
+						prom.addItem(IDpromocja+";"+Nazwa);
+					}
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
+
 	            JOptionPane.showOptionDialog(null, prom, "Promocja",
 	                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,
 	                    options[0]);
@@ -275,6 +324,9 @@ public class KatalogPracownik {
 	            //"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
 		        Object[] row = { name, cost, promocja, am, kategoria  };
 			    dtm.addRow(row);
+
+				//TODO - DOdanie
+
 	        }
 	    });
 	    
@@ -283,10 +335,11 @@ public class KatalogPracownik {
 	    fKA.add(edit);
 	    fKA.add(delete);
 	    fKA.add(spinner);
-	    fKA.add(p);          
+	    fKA.add(p);
 	    System.out.println("myk");
 	    fKA.add(kategoria);
 	    fKA.pack();
 	    fKA.setVisible(true);
+
 	}
 }

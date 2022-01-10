@@ -79,26 +79,20 @@ public class katalog {
 	    
 	    kategoria.setOpaque(false);
 	    
-	    String column[]={"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "ID Produktu"};         
+	    String column[]={"ID Produktu", "Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki"};
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);    
 
-		//name - nazwaKategorii
-	    ////////////////////////////////////////////////
-	    //dane do wypisania w tabeli
-	    //wszystko podobnie jak w koszyku
-	    //DONE BM
-	    //TODO BM dodaæ do selecta id produktu na ostatnim polu, potrzebne
 		try{
-			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT Produkt.Nazwa AS Nazwa, Produkt.Cena AS Cena, Produkt.DostepneSztuki AS Sztuki, Promocja.Wartosc AS Promocja FROM Produkt, Promocja, PromocjeNaProdukty WHERE Promocja.IDPromocji=PromocjeNaProdukty.PromocjaIDPromocji AND Produkt.IDProduktu=PromocjeNaProdukty.ProduktIDProduktu AND KategoriaIDKategorii="+idKategorii+";");
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT Produkt.IDProduktu AS IDProduktu, Produkt.Nazwa AS Nazwa, Produkt.Cena AS Cena, Produkt.DostepneSztuki AS Sztuki, Promocja.Wartosc AS Promocja FROM Produkt, Promocja, PromocjeNaProdukty WHERE Promocja.IDPromocji=PromocjeNaProdukty.PromocjaIDPromocji AND Produkt.IDProduktu=PromocjeNaProdukty.ProduktIDProduktu AND KategoriaIDKategorii="+idKategorii+";");
 			while(resultSet.next()){
+				String idProduktu = resultSet.getString("IDProduktu");
 				String nazwa = resultSet.getString("Nazwa");
 				String cena = resultSet.getString("Cena");
 				String sztuki = resultSet.getString("Sztuki");
 				String promocja = resultSet.getString("Promocja");
-				//String idProduktu = ...
-				String[] row = {nazwa, cena, promocja, sztuki}; // dopisaæ id produktu na koñcu
+				String[] row = {idProduktu, nazwa, cena, promocja, sztuki};
 				dtm.addRow(row);
 			}
 		}catch(SQLException e){
@@ -140,16 +134,16 @@ public class katalog {
 	    dodaj.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	if(spinner.getValue().toString()=="0") {
-	        		JOptionPane.showMessageDialog(fKA, "Nie mo¿esz dodaæ 0 produktów!");
+	        		JOptionPane.showMessageDialog(fKA, "Nie moï¿½esz dodaï¿½ 0 produktï¿½w!");
 	        	}else {
         		jt.getSelectedRow();
         		spinner.getValue();
         		int row = jt.getSelectedRow();
         		String nazwaWybranego = jt.getModel().getValueAt(row, 1).toString();
         		String cenaWybranego = jt.getModel().getValueAt(row, 3).toString();
-       		 String idWybranegoProduktu = jt.getModel().getValueAt(row, 5).toString(); // mo¿e 4, jeœli liczy od 0, nie mam czasu na testy
+       		 String idWybranegoProduktu = jt.getModel().getValueAt(row, 0).toString(); // moï¿½e 4, jeï¿½li liczy od 0, nie mam czasu na testy
 
-        		 String[] row1={nazwaWybranego,spinner.getValue().toString(),cenaWybranego, idWybranegoProduktu};
+        		 String[] row1={idWybranegoProduktu, nazwaWybranego,spinner.getValue().toString(),cenaWybranego};
         		koszykObj.addToBasket(row1);
         		
 	        	}

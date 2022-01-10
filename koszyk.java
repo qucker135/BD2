@@ -64,18 +64,10 @@ public class koszyk {
 		fK.setSize(751, 650);
 		fK.setResizable(false);
 	    
-	    String column[]={"Produkt","Iloï¿½ï¿½","Cena", "idProduktu"};      
+	    String column[]={"idProduktu", "Produkt","Iloï¿½ï¿½","Cena" };
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
-	    JTable jt=new JTable(dtm);    
-	    
-	    ////////////////////////////////////////////////
-	    //dane do wypisania w tabeli
-	    //Do zmiennej amount of data wpisaï¿½ iloï¿½ï¿½ produktï¿½w
-	    //coï¿½ mï¿½wiliï¿½my o tym, ï¿½eby byï¿½y domyï¿½lne wartoï¿½ci, to w pole imie, imie2 itd. trzeba by wstawiï¿½ domyï¿½lny tekst. zostawiam do przemyï¿½lenia
-	    //w idKlienta jest id klienta, ktï¿½ry teraz pracuje na aplikacji
-	    //TODO BM + Franciszek
-		//"SELECT "
+	    JTable jt=new JTable(dtm);
 
         int iterator = 0;
         System.out.println(rows.size());
@@ -162,9 +154,42 @@ public class koszyk {
 	        	//powyï¿½ej czyta dane z pï¿½l tekstowych, zajmij sie tym, ï¿½eby zostaï¿½y one odpowiednio 
 	        	//przetworzone przez bazï¿½
 	        	//TODO BM + Franciszek
-	     	    //nowy wpis do tabeli transakcje, zawiera dane zebrane wy¿ej, do tego potrzebny nowy wpis w tabelach 
-	     	    //nr egzemplarza w transakcji, który zawiera po jedyn konkretnym przedmiocie z danego typu
-	     	    //w tabeli Produkty zmniejszamy iloœæ dostêpnych o iloœæ kupionych
+	     	    //nowy wpis do tabeli transakcje, zawiera dane zebrane wyï¿½ej, do tego potrzebny nowy wpis w tabelach 
+	     	    //nr egzemplarza w transakcji, ktï¿½ry zawiera po jedyn konkretnym przedmiocie z danego typu
+	     	    //w tabeli Produkty zmniejszamy iloï¿½ï¿½ dostï¿½pnych o iloï¿½ï¿½ kupionych
+
+				//SELECT AdresIDAdresu FROM Klient WHERE Klient.PESEL = /*PESEL*/
+				//SELECT EMailIDEmail FROM Klient WHERE Klient.PESEL = /*PESEL*/
+				//SELECT nrTelefonu FROM Klient WHERE Klient.PESEL = /*PESEL*/ - jedno zapytanie
+
+
+
+				//Transakcja - INSERT
+				//PESEL - arg
+				//STATUS - 1
+				//Pracownik - rand()
+				//nrParagonu - idTransakcji + 12losowaych bitow
+				//datoczasZakupu - NOW()
+				//czyOplacono - 1
+				//lacznaCena - 0
+
+				//UPDATE TRanskacji - (ustalenie nrParagonu na podstwie ostatniego IDTransakcji)
+
+				//petla{
+
+				//NrEgzemplarza w transakcji - (petla)
+				//IDtransakcji - SELECT*FROM get lAST of Transkacja
+				//EgzemplarzIDserii - SELECT Egzemplarz.IDSerii FROM egzemplarz WHERE Produkt.IDProduktu = /*ProduktID - dziwne iterowanie po JTable*/ AND czyDostepne = 1 LIMIT 1
+				//nrParagonu - idTransakcji + 12losowaych bitow
+				//nrSeryjny - SELECT na podstawie EgzemplarzIDserii
+				//finalna cena - SELECT cena from produkt (produktID mamy)
+				//i jeszcze select do promocji
+
+				//UPDATE Egzemplarza - wyzerowanie dostepnosci
+
+				//UPDATE Produktu - zmniejszenie ilosci
+
+				//}end-petla
 	        }
 	    });
 	    back.addActionListener(new ActionListener() {
