@@ -55,6 +55,8 @@ public class ListaPracownik {
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
+		fLK.setSize(751, 650);
+		fLK.setResizable(false);
 	    
 	    System.out.println("tralalala");
 	    String column[]={"Produkt","Iloï¿½ï¿½","Cena"};         
@@ -82,7 +84,7 @@ public class ListaPracownik {
     	paragony.getSelectedItem(); //nrParagonu
 
 	    for(int i=0; i<amountOfData; i++) {
-	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½
+	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½ dla ka¿dego paragonu
 	        Object[] row = { prod, il, cena };
 		    dtm.addRow(row);
 

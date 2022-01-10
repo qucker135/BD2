@@ -28,9 +28,11 @@ public class MenuKlient {
 
     Menu menu;
     ListaKlient lista;
-    koszyk koszykObj = new koszyk(); //koszyk jest trzymany na caï¿½ï¿½ sesjï¿½
-	
-	public void function(String PESEL) {
+    //koszyk koszykObj = new koszyk(); //koszyk jest trzymany na caï¿½ï¿½ sesjï¿½
+    koszyk koszykObj = null;
+
+    
+	public void function(String PESEL, koszyk maybeObject) {
 		JFrame fMK = new JFrame();
 
 	    try {
@@ -38,6 +40,15 @@ public class MenuKlient {
 	        fMK.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("menuV2.jpg")))));
 	    } catch (IOException e) {
 	        e.printStackTrace();
+	    }
+		fMK.setSize(751, 650);
+		fMK.setResizable(false);
+	    
+	    if(null == maybeObject) {
+	        koszykObj = new koszyk(); //koszyk jest trzymany na ca³¹ sesjê
+	        System.out.println("nowy koszyk");
+	    }else {
+	    	koszykObj = maybeObject;
 	    }
 	    
 	    
@@ -73,7 +84,7 @@ public class MenuKlient {
 	    barKatalog.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		menu = new Menu();
-        		menu.function(PESEL);
+        		menu.function(PESEL, koszykObj);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;
@@ -83,7 +94,7 @@ public class MenuKlient {
 	    barKoszyk.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	
-	        	koszykObj.function(PESEL);
+	        	koszykObj.function(PESEL, koszykObj);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;
@@ -106,15 +117,6 @@ public class MenuKlient {
 	        }
 	    });
 	    
-	    // new button
-	   // JButton beep;
-	  //  beep= new JButton(iconA);
-	   // beep.setRolloverIcon(iconA);
-	   // beep.setBounds(100,90,231,29); //231 29
-	   // beep.setBorderPainted(false);
-
-	   // fMK.add(beep);
-	    // end of new button
 	    
 	    
 	    katalog = new JButton("KATALOG", bBG);
@@ -154,7 +156,7 @@ public class MenuKlient {
 	    katalog.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		menu = new Menu();
-        		menu.function(PESEL);
+        		menu.function(PESEL, koszykObj);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;
@@ -163,8 +165,7 @@ public class MenuKlient {
 	    });
 	    koszyk.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	koszykObj = new koszyk();
-	        	koszykObj.function(PESEL);
+	        	koszykObj.function(PESEL, koszykObj);
         		fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;
@@ -173,7 +174,7 @@ public class MenuKlient {
 	    historia.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		lista = new ListaKlient();
-        		lista.function(PESEL);
+        		lista.function(PESEL, koszykObj);
 	            fMK.setVisible(false); //you can't see me!
         		fMK.dispose(); //Destroy the JFrame object
         		return;

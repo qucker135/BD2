@@ -18,7 +18,7 @@ public class Menu {
 	static JButton tv;
 
 	katalog katalog;
-	public void function(String PESEL){
+	public void function(String PESEL, koszyk koszykObj){
 		JFrame fM = new JFrame();
 
     	try {
@@ -27,6 +27,9 @@ public class Menu {
     	} catch (IOException e) {
     	e.printStackTrace();
     	}
+    	
+		fM.setSize(751, 650);
+		fM.setResizable(false);
     	
     	laptopy = new JButton("");
     	smartfony= new JButton("");
@@ -59,7 +62,7 @@ public class Menu {
 	    laptopy.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function(2, PESEL);
+        		katalog.function(2, PESEL, koszykObj);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;
@@ -68,7 +71,7 @@ public class Menu {
 	    smartfony.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function(3, PESEL);
+        		katalog.function(3, PESEL, koszykObj);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;
@@ -77,7 +80,7 @@ public class Menu {
 	    gaming.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function(1, PESEL);
+        		katalog.function(1, PESEL, koszykObj);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;
@@ -86,7 +89,7 @@ public class Menu {
 	    up.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function(4, PESEL);
+        		katalog.function(4, PESEL, koszykObj);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;
@@ -95,7 +98,7 @@ public class Menu {
 	    tv.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		katalog = new katalog();
-        		katalog.function(5, PESEL);
+        		katalog.function(5, PESEL, koszykObj);
         		fM.setVisible(false); //you can't see me!
         		fM.dispose(); //Destroy the JFrame object
         		return;

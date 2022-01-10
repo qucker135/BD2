@@ -4,11 +4,14 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class MenuPracownik {
 
@@ -33,6 +36,10 @@ public class MenuPracownik {
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
+	    
+		fMP.setSize(751, 650);
+		fMP.setResizable(false);
+	    
 	    katalog = new JButton("KATALOG", bBG);
 	    noweKonto = new JButton("NOWE KONTO", bBG);
 	    lista = new JButton("LISTA", bBG);
@@ -75,15 +82,48 @@ public class MenuPracownik {
 	    });
 	    noweKonto.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	            String PESEL=JOptionPane.showInputDialog(fMP,"Wpisz Pesel");  
-	            String Adres=JOptionPane.showInputDialog(fMP,"Wpisz adres");  
-	            String email=JOptionPane.showInputDialog(fMP,"Wpisz adres email");  
-	            String telefon=JOptionPane.showInputDialog(fMP,"Wpisz numer telefonu");  
-	            String haslo=JOptionPane.showInputDialog(fMP,"Wpisz has³o");  
-	            String imie=JOptionPane.showInputDialog(fMP,"Wpisz swoje imiê");  
-	            String imie2=JOptionPane.showInputDialog(fMP,"Wpisz swoje drugie imiê");  
-	            String nazwisko=JOptionPane.showInputDialog(fMP,"Wpisz swoje nazwisko");  
-	            //TODO BM z tych danych mykamy nowe konto
+	            
+	            JTextField peselInput = new JTextField(11);
+	            JTextField adresInput = new JTextField(5);
+	            JTextField emailInput = new JTextField(5);
+	            JTextField telefonInput = new JTextField(5);
+	            JTextField hasloInput = new JTextField(5); //rozmiary??? TODO BM
+	            JTextField imieInput = new JTextField(15);
+	            JTextField imie2Input = new JTextField(15);
+	            JTextField nazwiskoInput = new JTextField(25);
+
+	            JPanel myPanel = new JPanel();
+	            myPanel.add(new JLabel("PESEL:"));
+	            myPanel.add(peselInput);
+	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("Adres:"));
+	            myPanel.add(adresInput);
+	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("e-mail:"));
+	            myPanel.add(emailInput);
+	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("telefon:"));
+	            myPanel.add(telefonInput);
+	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("has³o:"));
+	            myPanel.add(hasloInput);
+	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("imiê:"));
+	            myPanel.add(imieInput);
+	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("drugie imiê:"));
+	            myPanel.add(imie2Input);
+	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("nazwisko:"));
+	            myPanel.add(nazwiskoInput);
+	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+
+	            int result = JOptionPane.showConfirmDialog(null, myPanel, 
+	                     "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
+	            if (result == JOptionPane.OK_OPTION) {
+	               // nowy wpis do klientów, getTextField
+	            	//TODO BM
+	            }
 	        }
 	    });
 	    lista.addActionListener(new ActionListener() {
@@ -97,7 +137,7 @@ public class MenuPracownik {
 	    });
 	   mojeKonto.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	//TODO BM zapisaæ dane pracownika do zmiennych ni¿ej
+	        	//TODO BM zapisaæ dane pracownika do zmiennych ni¿ej SELECT na pracownikach
 	        	String imie = "SampleName";
 	        	String nazwisko = "SampleSurname";
 	        	String imie2 = "Andrzej";

@@ -50,7 +50,7 @@ public class ListaKlient {
 	int il2 =99;
 	int cena2 = 981;
 	
-	public void function(String PESEL) {
+	public void function(String PESEL, koszyk koszykObj) {
 		JFrame fLK = new JFrame();
 
 		//global connection to db
@@ -113,7 +113,7 @@ public class ListaKlient {
 	    back.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	MenuKlient menu = new MenuKlient();
-        		menu.function(PESEL);
+        		menu.function(PESEL, koszykObj);
         		fLK.setVisible(false); //you can't see me!
         		fLK.dispose(); //Destroy the JFrame object
         		return;

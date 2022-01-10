@@ -67,16 +67,20 @@ public class KatalogPracownik {
 	        e.printStackTrace();
 	    }
 	    
+		fKA.setSize(751, 650);
+		fKA.setResizable(false);
+	    
 	    kategoria = new JTextField();
 	    kategoria.setBounds(300, 30, 200, 70);
 	    
 	    kategoria.setOpaque(false);
 	    
-	    String column[]={"Produkt", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"};
+	    String column[]={"Produkt", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria", "idProduktu"};
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);
 
+	    //TODO BM select jeszcze id produktu
 		try{
 			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT Produkt.Nazwa AS Produkt, Produkt.Cena, Produkt.DostepneSztuki, Kategoria.Nazwa AS Kategoria, Promocja.Wartosc AS Promocja FROM Produkt, Kategoria, Promocja, PromocjeNaProdukty WHERE Produkt.KategoriaIDkategorii=Kategoria.IDkategorii AND Produkt.IDproduktu=PromocjeNaProdukty.ProduktIDproduktu AND Promocja.IDPromocji=PromocjeNaProdukty.PromocjaIDpromocji;");
 			while(resultSet.next()) {
@@ -85,6 +89,7 @@ public class KatalogPracownik {
 				String Promocja = resultSet.getString("Promocja");
 				String Sztuki = resultSet.getString("DostepneSztuki");
 				String Kategoria = resultSet.getString("Kategoria");
+				//dodaæ id produktu
 				String[] row = {Produkt, Cena, Promocja, Sztuki, Kategoria};
 				dtm.addRow(row);
 			}
@@ -162,10 +167,9 @@ public class KatalogPracownik {
 	            String op=JOptionPane.showInputDialog(tmp, "Zmiana Opisu");
 	            JComboBox kat = new JComboBox();
 	            int amountOfKat=10;
-	            //TODO BM czytanie iloï¿½ci kategorii
-	            //amountOfKat = ...
+	            //TODO BM Select * kategorie i w pêtli wpisujemy 
 	            for(int i=0; i<amountOfKat; i++) {
-	            	kat.addItem("myk"+i);
+	            	kat.addItem("kategoria"+i);
 	            }
 	            
 	            String[] options = { "OK"};
@@ -178,10 +182,9 @@ public class KatalogPracownik {
 
 	            JComboBox prom = new JComboBox();
 	            int amountOfProm =10;
-	            //TODO BM czytanie iloï¿½ci kategorii
-	            //amountOfKat = ...
+	            //TODO BM w pêtli wczytujemy wszhystkie promocje. Select all promocje i w pêtli dodajemy
 	            for(int i=0; i<amountOfProm; i++) {
-	            	prom.addItem("dupa"+i);
+	            	prom.addItem("prom"+i);
 	            }
 	            JOptionPane.showOptionDialog(null, prom, "Zmiana Promocji",
 	                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,
@@ -190,7 +193,8 @@ public class KatalogPracownik {
 	            System.out.print(promocja);
 	            
 	            //"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
-	            //TODO BM edycja danych z bazy danych
+	            //TODO BM edycja danych z tabeli produkty
+	            jt.getModel().getValueAt(jt.getSelectedRow(), 6).toString(); // idProduktu który mamy zmienniæ //mo¿e byæ 5, jeœli liczy od 0
 	            dtm.removeRow(jt.getSelectedRow());
 		        Object[] row = { name, cost, promocja, am, kategoria  };
 			    dtm.addRow(row);
@@ -204,8 +208,8 @@ public class KatalogPracownik {
 	    delete.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	((DefaultTableModel)jt.getModel()).removeRow(jt.getSelectedRow());
-	        	//TODO BM
-	        	//usuwanie produktu z listy zamï¿½wieï¿½
+	        	//TODO BM usuwamy wybrany produkt po id
+	            jt.getModel().getValueAt(jt.getSelectedRow(), 6).toString(); // idProduktu który mamy usun¹æ //mo¿e byæ 5, jeœli liczy od 0
 
 	        }
 	    });
@@ -241,8 +245,8 @@ public class KatalogPracownik {
 	            String op=JOptionPane.showInputDialog(tmp,"Wpisz opis");
 	            JComboBox kat = new JComboBox();
 	            int amountOfKat=10;
-	            //TODO BM czytanie iloï¿½ci kategorii
-	            //amountOfKat = ...
+	            //TODO BM Select * kategorie i w pêtli wpisujemy 
+
 	            for(int i=0; i<amountOfKat; i++) {
 	            	kat.addItem("myk"+i);
 	            }
@@ -257,10 +261,10 @@ public class KatalogPracownik {
 
 	            JComboBox prom = new JComboBox();
 	            int amountOfProm =10;
-	            //TODO BM czytanie iloï¿½ci kategorii
-	            //amountOfKat = ...
+	            //TODO BM w pêtli wczytujemy wszhystkie promocje. Select all promocje i w pêtli dodajemy
+
 	            for(int i=0; i<amountOfProm; i++) {
-	            	prom.addItem("dupa"+i);
+	            	prom.addItem("prom"+i);
 	            }
 	            JOptionPane.showOptionDialog(null, prom, "Promocja",
 	                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,

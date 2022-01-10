@@ -48,9 +48,10 @@ public class koszyk {
     int cena = -1;
     
     MenuKlient menu;
-    
+    ArrayList <String []>rows = new ArrayList<>();
 
-	public void function(String PESEL) {
+
+	public void function(String PESEL, koszyk koszykObj) {
 		JFrame fK = new JFrame();
 
 	    try {
@@ -60,7 +61,10 @@ public class koszyk {
 	        e.printStackTrace();
 	    }    
 	    
-	    String column[]={"Produkt","Iloï¿½ï¿½","Cena"};      
+		fK.setSize(751, 650);
+		fK.setResizable(false);
+	    
+	    String column[]={"Produkt","Iloï¿½ï¿½","Cena", "idProduktu"};      
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);    
@@ -73,16 +77,15 @@ public class koszyk {
 	    //TODO BM + Franciszek
 		//"SELECT "
 
-	    String[] item={"A","B","C","D"};
-	    dtm.addRow(item);
+        int iterator = 0;
+        System.out.println(rows.size());
 
-	    for(int i=0; i<amountOfData; i++) {
-	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½
-	        Object[] row = { prod, il, cena };
-		    dtm.addRow(row);
+        while (iterator < rows.size()) {
+            System.out.println(rows.get(iterator));
+            dtm.addRow(rows.get(iterator));
+            iterator++;
+        }
 
-	    }
-	    
 
 	    //////////////////////////////////////
 	    jt.setBounds(0,0,200,100);      
@@ -142,8 +145,6 @@ public class koszyk {
 	    usun.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	((DefaultTableModel)jt.getModel()).removeRow(jt.getSelectedRow());
-	        	//Twoja w tym gï¿½owa, ï¿½eby w tym miejscu byï¿½ kod, ktï¿½ry usuwa element z tabeli
-	        	//TODO BM + Franciszek
 	        }
 	    });
 	    kup.addActionListener(new ActionListener() {
@@ -161,12 +162,15 @@ public class koszyk {
 	        	//powyï¿½ej czyta dane z pï¿½l tekstowych, zajmij sie tym, ï¿½eby zostaï¿½y one odpowiednio 
 	        	//przetworzone przez bazï¿½
 	        	//TODO BM + Franciszek
+	     	    //nowy wpis do tabeli transakcje, zawiera dane zebrane wy¿ej, do tego potrzebny nowy wpis w tabelach 
+	     	    //nr egzemplarza w transakcji, który zawiera po jedyn konkretnym przedmiocie z danego typu
+	     	    //w tabeli Produkty zmniejszamy iloœæ dostêpnych o iloœæ kupionych
 	        }
 	    });
 	    back.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
         		menu = new MenuKlient();
-        		menu.function(PESEL);
+        		menu.function(PESEL, koszykObj);
         		fK.setVisible(false); //you can't see me!
         		fK.dispose(); //Destroy the JFrame object
         		return;
@@ -193,5 +197,11 @@ public class koszyk {
 	    fK.pack();
 	    fK.setVisible(true);
 	}
+	public void addToBasket(String[] row) {
+		rows.add(row);
+		System.out.println("Dodano");
+		return;
+	}
+
 
 }

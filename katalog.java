@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -47,8 +48,11 @@ public class katalog {
     int min=0;
     int max=10;
 	
-	public void function(Integer idKategorii, String PESEL) {
+	public void function(Integer idKategorii, String PESEL, koszyk koszykObj) {
 		JFrame fKA = new JFrame();
+		fKA.setSize(751, 650);
+		fKA.setResizable(false);
+
 
 		//global connection to db
 		Connection connection = connection = DbConnector.connect();
@@ -75,7 +79,7 @@ public class katalog {
 	    
 	    kategoria.setOpaque(false);
 	    
-	    String column[]={"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki"};         
+	    String column[]={"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "ID Produktu"};         
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);    
@@ -85,6 +89,7 @@ public class katalog {
 	    //dane do wypisania w tabeli
 	    //wszystko podobnie jak w koszyku
 	    //DONE BM
+	    //TODO BM dodaæ do selecta id produktu na ostatnim polu, potrzebne
 		try{
 			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT Produkt.Nazwa AS Nazwa, Produkt.Cena AS Cena, Produkt.DostepneSztuki AS Sztuki, Promocja.Wartosc AS Promocja FROM Produkt, Promocja, PromocjeNaProdukty WHERE Promocja.IDPromocji=PromocjeNaProdukty.PromocjaIDPromocji AND Produkt.IDProduktu=PromocjeNaProdukty.ProduktIDProduktu AND KategoriaIDKategorii="+idKategorii+";");
 			while(resultSet.next()){
@@ -92,7 +97,8 @@ public class katalog {
 				String cena = resultSet.getString("Cena");
 				String sztuki = resultSet.getString("Sztuki");
 				String promocja = resultSet.getString("Promocja");
-				String[] row = {nazwa, cena, promocja, sztuki};
+				//String idProduktu = ...
+				String[] row = {nazwa, cena, promocja, sztuki}; // dopisaæ id produktu na koñcu
 				dtm.addRow(row);
 			}
 		}catch(SQLException e){
@@ -133,11 +139,21 @@ public class katalog {
 	    dodaj.setBorderPainted(false);
 	    dodaj.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
+	        	if(spinner.getValue().toString()=="0") {
+	        		JOptionPane.showMessageDialog(fKA, "Nie mo¿esz dodaæ 0 produktów!");
+	        	}else {
         		jt.getSelectedRow();
         		spinner.getValue();
-        		//TODO Franciszek
-        		//dodanie zaznaczonego produktu do koszyka w wartoï¿½ci spinner
-	        }
+        		int row = jt.getSelectedRow();
+        		String nazwaWybranego = jt.getModel().getValueAt(row, 1).toString();
+        		String cenaWybranego = jt.getModel().getValueAt(row, 3).toString();
+       		 String idWybranegoProduktu = jt.getModel().getValueAt(row, 5).toString(); // mo¿e 4, jeœli liczy od 0, nie mam czasu na testy
+
+        		 String[] row1={nazwaWybranego,spinner.getValue().toString(),cenaWybranego, idWybranegoProduktu};
+        		koszykObj.addToBasket(row1);
+        		
+	        	}
+	        	}
 	    });
 	    
 	    back = new JButton("POWRï¿½T", bBG);
@@ -148,7 +164,7 @@ public class katalog {
 	    back.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	MenuKlient menu = new MenuKlient();
-        		menu.function(PESEL);
+        		menu.function(PESEL, koszykObj);
         		fKA.setVisible(false); //you can't see me!
         		fKA.dispose(); //Destroy the JFrame object
         		return;

@@ -75,7 +75,7 @@ public class SecondLogin {
 	        	if(whoIsThere==1) {
 	        		MK = new MenuKlient();
 
-	        		MK.function(PESEL);
+	        		MK.function(PESEL, null);
 	        		fSL.setVisible(false); //you can't see me!
 	        		fSL.dispose(); //Destroy the JFrame object
 	        		return;
