@@ -227,6 +227,10 @@ public class koszyk {
 		System.out.println("Dodano");
 		return;
 	}
+	
+	public ArrayList getKoszyk() {
+		return rows;	
+	}
 
 
 }

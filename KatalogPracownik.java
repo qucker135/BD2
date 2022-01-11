@@ -109,7 +109,10 @@ public class KatalogPracownik {
 	    p.add(sp);
 
 	    min = 0;
-		max = 10;//podepnij do bazy // TODO Franciszek zabezpieczenie
+		max = 10;//podepnij do bazy // TODO Franciszek zabezpieczenie column 4
+		max = Integer.parseInt((String) jt.getModel().getValueAt(jt.getSelectedRow(), 4)); // ten select jest bez sensu w sumie
+
+
 
 		try{
 			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT COUNT(*) AS Liczba FROM Produkt;");
@@ -216,9 +219,10 @@ public class KatalogPracownik {
 	            
 	            //"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
 	            //TODO BM edycja danych z tabeli produkty
-	            jt.getModel().getValueAt(jt.getSelectedRow(), 5).toString(); // idProduktu ktï¿½ry mamy zmienniï¿½ //moï¿½e byï¿½ 5, jeï¿½li liczy od 0
+	            jt.getModel().getValueAt(jt.getSelectedRow(), 5).toString(); // !! 5 -> 0 !! idProduktu ktï¿½ry mamy zmienniï¿½ //moï¿½e byï¿½ 5, jeï¿½li liczy od 0
+	            String idProduktu = jt.getModel().getValueAt(jt.getSelectedRow(), 0).toString();
 	            dtm.removeRow(jt.getSelectedRow());
-		        Object[] row = { name, cost, promocja, am, kategoria  };
+		        Object[] row = { idProduktu, name, cost, promocja, am, kategoria}; 
 			    dtm.addRow(row);
 	        }}
 	    });
@@ -233,7 +237,7 @@ public class KatalogPracownik {
 	        	//TODO BM usuwamy wybrany produkt po id
 				String idproduktu = jt.getModel().getValueAt(jt.getSelectedRow(), 0).toString();// idProduktu ktï¿½ry mamy usunï¿½ï¿½ //moï¿½e byï¿½ 5, jeï¿½li liczy od 0
 
-				System.out.println(idproduktu);
+				System.out.println(idproduktu); //TODO FS ??? czemu to nie dzia³a
 
 				//try{
 					DbConnector.executeQuery("DELETE FROM PromocjeNaProdukty WHERE ProduktIDproduktu = "+idproduktu+";");
@@ -322,10 +326,11 @@ public class KatalogPracownik {
 	            System.out.print(promocja);
 	            
 	            //"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
+	           // idProduktu", "Produkt", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
 		        Object[] row = { name, cost, promocja, am, kategoria  };
 			    dtm.addRow(row);
 
-				//TODO - DOdanie
+				//TODO BM w row nale¿y dopdaæ najpierw ID nowego produktu, tego teraz nie ma
 
 	        }
 	    });

@@ -41,7 +41,8 @@ public class SecondLogin {
     
 	public void run(int whoIsThere){
 		JFrame fSL = new JFrame();
-
+	    fSL.setSize(1200, 847);
+	    fSL.setResizable(false);
 	    try {
 	    	
 	        fSL.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File("logowanie1.jpg")))));

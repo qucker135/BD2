@@ -29,18 +29,21 @@ public class introLogin {
     } catch (IOException e) {
         e.printStackTrace();
     }
+    f.setSize(1800, 1049);
+    f.setResizable(false);
+
     
 
     JButton klient = new JButton("");
     klient.setBounds(350, 490, 290, 100);
     klient.setOpaque(false);
     klient.setContentAreaFilled(false);
-    klient.setBorderPainted(false);
+    klient.setBorderPainted(true);
     JButton pracownik = new JButton("");
     pracownik.setBounds(710, 490, 290, 100);
     pracownik.setOpaque(false);
     pracownik.setContentAreaFilled(false);
-    pracownik.setBorderPainted(false);
+    pracownik.setBorderPainted(true);
     f.add(klient);
     f.add(pracownik);
     klient.addActionListener(new ActionListener() {

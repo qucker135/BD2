@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
@@ -90,7 +91,29 @@ public class katalog {
 				String idProduktu = resultSet.getString("IDProduktu");
 				String nazwa = resultSet.getString("Nazwa");
 				String cena = resultSet.getString("Cena");
-				String sztuki = resultSet.getString("Sztuki");
+				String sztukiBefore = resultSet.getString("Sztuki");
+				//sekcja zabezpieczaj¹ca przed prze³adowaniem koszyka
+				Integer sztukiTMP = 0;
+				  try {
+						sztukiTMP = Integer.parseInt(sztukiBefore);
+					  } catch (NumberFormatException e) {
+					    System.out.println("sztuki z bazy danych to nie integer");
+					  }
+				  Integer takenProducts = 0;
+				 ArrayList<String[]> tmp = koszykObj.getKoszyk(); //id, nazwa, iloœæ, cena
+				for(int iterator =0; iterator < tmp.size(); iterator++) {
+					if(tmp.get(iterator)[0]==idProduktu) {
+						try {
+						takenProducts = Integer.parseInt(tmp.get(iterator)[2]);
+						  } catch (NumberFormatException e) {
+							    System.out.println("sztuki z koszyka to nie integer");
+						}
+					}
+				}
+				
+				//sekcja - end
+				Integer sztukiEnd = sztukiTMP-takenProducts;
+				String sztuki = sztukiEnd.toString();
 				String promocja = resultSet.getString("Promocja");
 				String[] row = {idProduktu, nazwa, cena, promocja, sztuki};
 				dtm.addRow(row);
@@ -114,7 +137,7 @@ public class katalog {
 	    max = 10;//podepnij do bazy
 
 		try{
-			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT COUNT(*) AS Liczba FROM Produkt;");
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT COUNT(*) AS Liczba FROM Produkt;");//TODO BM, chyba zasn¹³em, SELECT dostepne sztuki ... where idProduktu = get value At(get selected row, 0)
 			resultSet.next();
 			String maxAsText = resultSet.getString("Liczba");
 			max = parseInt(maxAsText);

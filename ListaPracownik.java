@@ -67,7 +67,7 @@ public class ListaPracownik {
 	    paragony = new JComboBox();
 	    
 	    /*
-	     * do comboboxa nale�y wpisa� wszystkie paragony 
+	     * do comboboxa nale�y wpisa� wszystkie paragony TODO BM
 	    */
 	    for(int i=0; i<amountOfPar; i++) {
 	    	paragony.addItem("myk");
