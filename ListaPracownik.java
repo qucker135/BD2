@@ -84,7 +84,7 @@ public class ListaPracownik {
     	paragony.getSelectedItem(); //nrParagonu
 
 	    for(int i=0; i<amountOfData; i++) {
-	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½ dla ka¿dego paragonu
+	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½ dla kaï¿½dego paragonu
 	        Object[] row = { prod, il, cena };
 		    dtm.addRow(row);
 

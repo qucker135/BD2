@@ -8,21 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
@@ -109,8 +95,8 @@ public class KatalogPracownik {
 	    p.add(sp);
 
 	    min = 0;
-		max = 10;//podepnij do bazy // TODO Franciszek zabezpieczenie column 4
-		max = Integer.parseInt((String) jt.getModel().getValueAt(jt.getSelectedRow(), 4)); // ten select jest bez sensu w sumie
+		max = 10;
+		//max = Integer.parseInt((String) jt.getModel().getValueAt(jt.getSelectedRow(), 4)); // ten select jest bez sensu w sumie
 
 
 
@@ -122,6 +108,7 @@ public class KatalogPracownik {
 		}catch(SQLException e){
 			e.printStackTrace();
 		}
+
 
 	    SpinnerModel value = new SpinnerNumberModel(0, min,max,1);
 	    spinner = new JSpinner(value); 
@@ -217,13 +204,24 @@ public class KatalogPracownik {
 	            String promocja = prom.getSelectedItem().toString();
 	            System.out.print(promocja);
 	            
-	            //"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
-	            //TODO BM edycja danych z tabeli produkty
+	            //"IDproduktu","Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
+	            //TODO FS - poprawic kolumny
 	            jt.getModel().getValueAt(jt.getSelectedRow(), 5).toString(); // !! 5 -> 0 !! idProduktu ktï¿½ry mamy zmienniï¿½ //moï¿½e byï¿½ 5, jeï¿½li liczy od 0
 	            String idProduktu = jt.getModel().getValueAt(jt.getSelectedRow(), 0).toString();
 	            dtm.removeRow(jt.getSelectedRow());
 		        Object[] row = { idProduktu, name, cost, promocja, am, kategoria}; 
 			    dtm.addRow(row);
+
+				//"UPDATE Produkty SET name=/*name*/, ... WHERE IDproduktu=/*idProduktu*/;"
+					try{
+						ResultSet resultSet = DbConnector.executeSelectQuery("SELECT IDkategorii FROM Kategoria WHERE Nazwa=\""+kategoria+"\" LIMIT 1;");
+						resultSet.next();
+						String idkategorii = resultSet.getString("IDkategorii");
+						DbConnector.executeQuery("UPDATE Produkt SET KategoriaIDkategorii="+idkategorii+", Nazwa=\""+name+"\", Cena="+costS+", DostepneSztuki="+amS+", Opis=\""+op+"\" WHERE IDproduktu="+idProduktu+";");
+						//TODO FS - zmiana ilosci sztuk musi pociagac jakies wywolanie do Egzemplarz
+					}catch(SQLException e2){
+						e2.printStackTrace();
+					}
 	        }}
 	    });
 	    delete = new JButton("USUï¿½", bBGd);
@@ -233,26 +231,24 @@ public class KatalogPracownik {
 	    delete.setBorderPainted(false);
 	    delete.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	((DefaultTableModel)jt.getModel()).removeRow(jt.getSelectedRow());
-	        	//TODO BM usuwamy wybrany produkt po id
 				String idproduktu = jt.getModel().getValueAt(jt.getSelectedRow(), 0).toString();// idProduktu ktï¿½ry mamy usunï¿½ï¿½ //moï¿½e byï¿½ 5, jeï¿½li liczy od 0
 
-				System.out.println(idproduktu); //TODO FS ??? czemu to nie dzia³a
-
-				//try{
+				try{
 					DbConnector.executeQuery("DELETE FROM PromocjeNaProdukty WHERE ProduktIDproduktu = "+idproduktu+";");
 					DbConnector.executeQuery("DELETE FROM Ocena WHERE ProduktIDproduktu = "+idproduktu+";");
+
+					ResultSet resultSet = DbConnector.executeSelectQuery("SELECT IDserii FROM Egzemplarz WHERE ProduktIDproduktu="+idproduktu+";");
+					while(resultSet.next()){
+						String idSerii = resultSet.getString("IDserii");
+						DbConnector.executeQuery("DELETE FROM NrEgzemplarzaWTransakcji WHERE EgzemplarzIDserii="+idSerii+";");
+					}
+
 					DbConnector.executeQuery("DELETE FROM Egzemplarz WHERE czyDostepne = 1 AND ProduktIDproduktu = "+idproduktu+";");
 					DbConnector.executeQuery("DELETE FROM Produkt WHERE IDproduktu = "+idproduktu+";");
-					/*
-					while(resultSet.next()){
-						String Nazwa = resultSet.getString("Nazwa");
-						//kat.addItem(Nazwa);
-					}
-					*/
-				//}catch(SQLException e2){
-				//	e2.printStackTrace();
-				//}
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
+				((DefaultTableModel)jt.getModel()).removeRow(jt.getSelectedRow());
 	        }
 	    });
 	    dodaj = new JButton("DODAJ PRODUKT", bBG);
@@ -327,10 +323,32 @@ public class KatalogPracownik {
 	            
 	            //"Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
 	           // idProduktu", "Produkt", "Cena", "Promocja", "Dostï¿½pne sztuki", "Kategoria"
-		        Object[] row = { name, cost, promocja, am, kategoria  };
-			    dtm.addRow(row);
 
-				//TODO BM w row nale¿y dopdaæ najpierw ID nowego produktu, tego teraz nie ma
+
+				try{
+
+					ResultSet resultSet = DbConnector.executeSelectQuery("SELECT IDkategorii FROM Kategoria WHERE Nazwa=\""+kategoria+"\" LIMIT 1;");
+					resultSet.next();
+					String idkategorii = resultSet.getString("IDkategorii");
+					DbConnector.executeQuery("INSERT INTO Produkt VALUES (DEFAULT, "+idkategorii+", \""+name+"\", "+costS+", "+amS+", \""+op+"\");");
+
+					ResultSet resultSet2 = DbConnector.executeSelectQuery("SELECT IDproduktu FROM Produkt ORDER BY IDproduktu DESC LIMIT 1;");
+					resultSet2.next();
+					String iDproduktu = resultSet2.getString("IDproduktu");
+					for(int i=0; i<am;i++){
+						//INSERT INTO Egzemplarz VALUES (DEFAULT, /*idProduktu*/, rand(), 1)
+						DbConnector.executeQuery("INSERT INTO Egzemplarz VALUES (DEFAULT, "+iDproduktu+", ROUND(RAND() * POWER(2,30)), 1);");
+					}
+
+					String idPromocji = prom.getSelectedItem().toString().split(";")[0];
+					System.out.println(idPromocji);
+					DbConnector.executeQuery("INSERT INTO PromocjeNaProdukty VALUES (DEFAULT, "+idPromocji+", "+iDproduktu+");");
+
+					Object[] row = {iDproduktu, name, cost, promocja, am, kategoria  };
+					dtm.addRow(row);
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
 
 	        }
 	    });
