@@ -67,9 +67,10 @@ public class ListaPracownik {
 	    paragony = new JComboBox();
 	    
 	    /*
-	     * do comboboxa naleï¿½y wpisaï¿½ wszystkie paragony TODO BM
+	     * Select numer paragonu, idtransakcji from transakcje;
 	    */
 	    for(int i=0; i<amountOfPar; i++) {
+	    	//dodamy ze splitem "idTransakcji;nrParagonu"
 	    	paragony.addItem("myk");
 	    }
 	    
@@ -81,11 +82,18 @@ public class ListaPracownik {
 
 	    String[] item={"A","B","C","D"};
 	    dtm.addRow(item);
-    	paragony.getSelectedItem(); //nrParagonu
+    	paragony.getSelectedItem().toString(); //nrParagonu
 
+    	//select produkt.nazwa produktu, count kupione sztuki, produkt cena
+    	//ten count kupione sztuki to tak:
+    	//transakcja.idTranakcji -> egzemplarzWTransakcji.transakcjaidTransakcji
+    	//egzemplarzWTransakcji.egzemplarzidSerii -> egzemplarz.IdSerii
+    	//egzemplarz.produktidProduktu<- liczymy ile tych pól jest takich samych 
 	    for(int i=0; i<amountOfData; i++) {
-	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½ dla kaï¿½dego paragonu
-	        Object[] row = { prod, il, cena };
+	    	//petla while
+	    	//prod = ..
+	    	//il = itd.
+	    	Object[] row = { prod, il, cena };
 		    dtm.addRow(row);
 
 	    } 
@@ -124,10 +132,11 @@ public class ListaPracownik {
 	    
 	    paragony.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	paragony.getSelectedItem();
+	        	paragony.getSelectedItem();//paragon
 	        	dtm.getDataVector().removeAllElements();
 	    	    for(int i=0; i<amountOfData; i++) {
-	    	    	//tutaj trzeba wklepaï¿½ w zmienne te 3 co sï¿½ poniï¿½ej nazwï¿½ produktu, iloï¿½ï¿½ do kupienia i cenï¿½
+	    	    	//to samo co wy¿ej w wype³nianiu tabeli, tylko, ¿e mamy nowy nr paragonu.
+	    	    	//TODO BM
 	    	        Object[] row = { prod2, il2, cena2 };
 	    		    dtm.addRow(row);
 

@@ -142,25 +142,27 @@ public class KatalogPracownik {
 	        	//System.out.println(jt.getSelectedRow());
 		    	}else {
 	        	JFrame tmp = new JFrame();
-	            String name=JOptionPane.showInputDialog(tmp, "Zmiana nazwy", dtm.getValueAt(jt.getSelectedRow(), 0));
+	            String name=JOptionPane.showInputDialog(tmp, "Zmiana nazwy", dtm.getValueAt(jt.getSelectedRow(), 1));
 	           // String name=JOptionPane.showInputDialog(tmp,"Wpisz Nazwï¿½");  
-	            String amS=JOptionPane.showInputDialog(tmp, "Zmiana Iloï¿½ci", dtm.getValueAt(jt.getSelectedRow(), 2));
+	            String amS=JOptionPane.showInputDialog(tmp, "Zmiana Iloï¿½ci", dtm.getValueAt(jt.getSelectedRow(), 4));
 	            int am=-1;
-	            while(am==-1) {
+	            int oldAm=-1;
+	            while(am<0) {
 	            try {
+	            } catch (NumberFormatException e2) {
+	            	oldAm = Integer.parseInt(dtm.getValueAt(jt.getSelectedRow(), 4).toString());
+		            amS=JOptionPane.showInputDialog(tmp, "Zmiana Iloï¿½ci", dtm.getValueAt(jt.getSelectedRow(), 4));
+	            }
 	            am=Integer.parseInt(amS);
-	            } catch (NumberFormatException e2) {
-		            amS=JOptionPane.showInputDialog(tmp, "Zmiana Iloï¿½ci", dtm.getValueAt(jt.getSelectedRow(), 2));
 	            }
-	            }
-	            String costS=JOptionPane.showInputDialog(tmp, "Zmiana ceny", dtm.getValueAt(jt.getSelectedRow(), 1));
-	            int cost=-1;
-	            while(cost==-1) {
+	            String costS=JOptionPane.showInputDialog(tmp, "Zmiana ceny", dtm.getValueAt(jt.getSelectedRow(), 2));
+	            float cost=-1;
+	            while(cost<0) {
 	            try {
-	            cost=Integer.parseInt(costS);
 	            } catch (NumberFormatException e2) {
-		            costS=JOptionPane.showInputDialog(tmp, "Zmiana ceny", dtm.getValueAt(jt.getSelectedRow(), 1));
+		            costS=JOptionPane.showInputDialog(tmp, "Zmiana ceny", dtm.getValueAt(jt.getSelectedRow(), 2));
 	            }
+	            cost=Float.parseFloat(costS);
 	            }
 	            System.out.print(cost);
 	            String op=JOptionPane.showInputDialog(tmp, "Zmiana Opisu");
@@ -222,6 +224,23 @@ public class KatalogPracownik {
 					}catch(SQLException e2){
 						e2.printStackTrace();
 					}
+					if(oldAm==-1) {
+						System.out.println("Edit - amount error");
+					}else {
+					if(oldAm>am) { // zmniejszyliœmy iloœæ prod
+						int dif = oldAm - am;
+						for(int i=0; i<dif; i++) {
+							//Delete from egzemplarz where produkt.idproduktu = idproduktu, czyDostepny ==1, limit 1; 
+						}
+						
+					}else if(am>oldAm) { //zwiêkszyliœmy iloœæ prod
+						int dif = am - oldAm;
+						for(int i=0; i<dif; i++) {
+							//INSERT INTO Egzemplarz VALUES (DEFAULT, /*idProduktu*/, rand(), 1)
+
+						}
+						//Wazne, tutaj bd wyskakiwal error, bo czy egzemplarz nie jest w mock data zwiazany z dostepne produkty
+					}}
 	        }}
 	    });
 	    delete = new JButton("USUï¿½", bBGd);
