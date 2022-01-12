@@ -20,6 +20,8 @@ import javax.swing.*;
 
 
 import java.awt.event.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 
 public class SecondLogin {
@@ -66,29 +68,118 @@ public class SecondLogin {
 	        public void actionPerformed(ActionEvent e) {
 	        	loginData = login.getText();
 	        	passwdData = passwd.getText();
+				String sha256hex = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdData);
 	        	/*
 	        	 * Tutaj trzeba doda� kod, kt�ry b�dzie sprawdza� passy z baz� danych
 	        	 * pracownik, albo klient po zmiennej whoIsThere
 	        	 * Nale�y te� zapewni�, aby znalezione id klient / pracownik zosta�o przypisane do odpowiedniej zmiennej
 	        	 * 
 	        	 */
-				String PESEL = "41"; //roboczo - TODO - BM
-	        	if(whoIsThere==1) {
-	        		MK = new MenuKlient();
+				//ResultSet rsHashHasla = DbConnector.executeSelectQuery("SELECT IDhasla FROM HasheHasel WHERE hashHasla=\""+sha256hex+"\";");
 
-	        		MK.function(PESEL, null);
-	        		fSL.setVisible(false); //you can't see me!
-	        		fSL.dispose(); //Destroy the JFrame object
-	        		return;
-	        	}
-	        	if(whoIsThere==2) {
-	        		MP=new MenuPracownik();
-	        		MP.function(idPracownika);
-	        		fSL.setVisible(false); //you can't see me!
-	        		fSL.dispose(); //Destroy the JFrame object
-	        		return;
-	        	}
-	        	
+				boolean czyPoprawnyLogin = false;
+
+				if(whoIsThere == 1){ //logowanie Klienta
+					try{
+						ResultSet resultSet = DbConnector.executeSelectQuery("SELECT HasheHaselIDhasla FROM Klient WHERE PESEL=\""+loginData+"\";");
+						int resultSetSize = 0;
+						String bfrIDHashHasla = "";
+						while(resultSet.next()){
+							resultSetSize++;
+							bfrIDHashHasla = resultSet.getString("HasheHaselIDhasla");
+						}
+						if(resultSetSize>0){
+							//znaleziono usera
+							try{
+								ResultSet resultSet2 = DbConnector.executeSelectQuery("SELECT hashHasla FROM HasheHasel WHERE IDhasla="+bfrIDHashHasla+";");
+
+								int resultSet2Size = 0;
+								String bfrHashHasla = "";
+								while(resultSet2.next()){
+									resultSet2Size++;
+									bfrHashHasla = resultSet2.getString("hashHasla");
+								}
+								if(resultSet2Size>0 && bfrHashHasla.equals(sha256hex)){
+									//zalogowano
+									czyPoprawnyLogin = true;
+								}
+								else{
+									JOptionPane.showMessageDialog(fSL, "Nieprawidłowe dane logowania");
+								}
+							}catch(SQLException e4){
+								e4.printStackTrace();
+							}
+
+						}
+						else {
+							//nie znaleziono usera
+							JOptionPane.showMessageDialog(fSL, "Nieprawidłowe dane logowania");
+						}
+					}catch (SQLException e3){
+						e3.printStackTrace();
+					}
+				}
+				if(whoIsThere == 2){ //logowanie Pracownika
+					try{
+						ResultSet resultSet = DbConnector.executeSelectQuery("SELECT HasheHaselIDhasla FROM Pracownik WHERE IDpracownika=\""+loginData+"\";");
+						int resultSetSize = 0;
+						String bfrIDHashHasla = "";
+						while(resultSet.next()){
+							resultSetSize++;
+							bfrIDHashHasla = resultSet.getString("HasheHaselIDhasla");
+						}
+						if(resultSetSize>0){
+							//znaleziono usera
+							try{
+								ResultSet resultSet2 = DbConnector.executeSelectQuery("SELECT hashHasla FROM HasheHasel WHERE IDhasla="+bfrIDHashHasla+";");
+
+								int resultSet2Size = 0;
+								String bfrHashHasla = "";
+								while(resultSet2.next()){
+									resultSet2Size++;
+									bfrHashHasla = resultSet2.getString("hashHasla");
+								}
+								if(resultSet2Size>0 && bfrHashHasla.equals(sha256hex)){
+									//zalogowano
+									czyPoprawnyLogin = true;
+								}
+								else{
+									JOptionPane.showMessageDialog(fSL, "Nieprawidłowe dane logowania");
+								}
+							}catch(SQLException e4){
+								e4.printStackTrace();
+							}
+
+						}
+						else {
+							//nie znaleziono usera
+							JOptionPane.showMessageDialog(fSL, "Nieprawidłowe dane logowania");
+						}
+					}catch (SQLException e3){
+						e3.printStackTrace();
+					}
+				}
+
+	        	if(czyPoprawnyLogin) {
+					if (whoIsThere == 1) {
+						MK = new MenuKlient();
+
+						MK.function(loginData, null);
+						fSL.setVisible(false); //you can't see me!
+						fSL.dispose(); //Destroy the JFrame object
+						return;
+					}
+					if (whoIsThere == 2) {
+						MP = new MenuPracownik();
+
+						idPracownika = Integer.parseInt(loginData);
+
+						MP.function(idPracownika);
+						fSL.setVisible(false); //you can't see me!
+						fSL.dispose(); //Destroy the JFrame object
+						return;
+					}
+				}
 	        }
 	    });
 	    

@@ -3,6 +3,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
 import javax.swing.GroupLayout;
@@ -57,46 +59,27 @@ public class ListaPracownik {
 	    }
 		fLK.setSize(751, 650);
 		fLK.setResizable(false);
-	    
-	    System.out.println("tralalala");
-	    String column[]={"Produkt","Iloï¿½ï¿½","Cena"};         
+
+	    String column[]={"Produkt","Numer Seryjny","Cena"};
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);    
 	    
 	    paragony = new JComboBox();
-	    
-	    /*
-	     * Select numer paragonu, idtransakcji from transakcje;
-	    */
-	    for(int i=0; i<amountOfPar; i++) {
-	    	//dodamy ze splitem "idTransakcji;nrParagonu"
-	    	paragony.addItem("myk");
-	    }
-	    
-	    
-	    ////////////////////////////////////////////////
-	    //dane do wypisania w tabeli
-	    //wszystko podobnie jak w koszyku
-	    //TODO BM
 
-	    String[] item={"A","B","C","D"};
-	    dtm.addRow(item);
-    	paragony.getSelectedItem().toString(); //nrParagonu
+		try {
+			ResultSet resultSet1 = DbConnector.executeSelectQuery("SELECT IDtransakcji, nrParagonu FROM Transakcja ORDER BY IDtransakcji;");
+			while(resultSet1.next()){
+				String IDtransakcji = resultSet1.getString("IDtransakcji");
+				String nrParagonu = resultSet1.getString("nrParagonu");
+				paragony.addItem(IDtransakcji+";"+nrParagonu);
+			}
+		}catch (SQLException e){
+			e.printStackTrace();
+		}
 
-    	//select produkt.nazwa produktu, count kupione sztuki, produkt cena
-    	//ten count kupione sztuki to tak:
-    	//transakcja.idTranakcji -> egzemplarzWTransakcji.transakcjaidTransakcji
-    	//egzemplarzWTransakcji.egzemplarzidSerii -> egzemplarz.IdSerii
-    	//egzemplarz.produktidProduktu<- liczymy ile tych pól jest takich samych 
-	    for(int i=0; i<amountOfData; i++) {
-	    	//petla while
-	    	//prod = ..
-	    	//il = itd.
-	    	Object[] row = { prod, il, cena };
-		    dtm.addRow(row);
+    	//paragony.getSelectedItem().toString(); //nrParagonu
 
-	    } 
 	    jt.setBounds(0,0,200,100);      
 	    jt.setBackground(Color.blue);
 	    JScrollPane sp=new JScrollPane(jt);    
@@ -106,11 +89,7 @@ public class ListaPracownik {
 	    p.setBackground(Color.white);
 	    p.add(sp);
 	    
-	    
-	    
-	    //TODO BM
-	    //ustaw numerZBD na numer  1 zamï¿½wienia danego klienta
-	    //numerZBD = ...
+
 	    nrZam = new JTextField();
 	    nrZam.setText(numerZBD);
 	    
@@ -134,13 +113,20 @@ public class ListaPracownik {
 	        public void actionPerformed(ActionEvent e) {
 	        	paragony.getSelectedItem();//paragon
 	        	dtm.getDataVector().removeAllElements();
-	    	    for(int i=0; i<amountOfData; i++) {
-	    	    	//to samo co wy¿ej w wype³nianiu tabeli, tylko, ¿e mamy nowy nr paragonu.
-	    	    	//TODO BM
-	    	        Object[] row = { prod2, il2, cena2 };
-	    		    dtm.addRow(row);
-
-	    	    } 
+				try{
+					System.out.println((String)paragony.getSelectedItem());
+					System.out.println(((String)paragony.getSelectedItem()).split(";")[0]);
+					ResultSet resultSet2 = DbConnector.executeSelectQuery("SELECT NrEgzemplarzaWTransakcji.nrSeryjny AS nrSeryjny, NrEgzemplarzaWTransakcji.finalnaCena AS Cena, Produkt.Nazwa AS Produkt FROM NrEgzemplarzaWTransakcji, Egzemplarz, Produkt WHERE Produkt.IDproduktu=Egzemplarz.ProduktIDproduktu AND NrEgzemplarzaWTransakcji.EgzemplarzIDserii=Egzemplarz.nrSeryjny AND NrEgzemplarzaWTransakcji.TransakcjaIDtransakcji = "+((String)paragony.getSelectedItem()).split(";")[0]+";");
+					while(resultSet2.next()) {
+						String Produkt = resultSet2.getString("Produkt");
+						String nrParagonu = resultSet2.getString("nrSeryjny");
+						String Cena = resultSet2.getString("Cena");
+						String[] row = {Produkt, nrParagonu, Cena};
+						dtm.addRow(row);
+					}
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
 	        }
 	    });
 	    

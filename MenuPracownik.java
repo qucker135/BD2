@@ -2,6 +2,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
@@ -12,6 +14,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+//import org.apache.commons.codec.digest;
 
 public class MenuPracownik {
 
@@ -84,10 +88,16 @@ public class MenuPracownik {
 	        public void actionPerformed(ActionEvent e) {
 	            
 	            JTextField peselInput = new JTextField(11);
-	            JTextField adresInput = new JTextField(5);
-	            JTextField emailInput = new JTextField(5);
-	            JTextField telefonInput = new JTextField(5);
-	            JTextField hasloInput = new JTextField(5); //rozmiary??? TODO BM
+
+				JTextField adresMiasto = new JTextField(50);
+				JTextField adresKod = new JTextField(6);
+				JTextField adresUlica = new JTextField(50);
+				JTextField adresBudynek = new JTextField(10);
+				JTextField adresLokal = new JTextField(10);
+
+	            JTextField emailInput = new JTextField(49);
+	            JTextField telefonInput = new JTextField(9);
+	            JTextField hasloInput = new JTextField(20);
 	            JTextField imieInput = new JTextField(15);
 	            JTextField imie2Input = new JTextField(15);
 	            JTextField nazwiskoInput = new JTextField(25);
@@ -95,34 +105,75 @@ public class MenuPracownik {
 	            JPanel myPanel = new JPanel();
 	            myPanel.add(new JLabel("PESEL:"));
 	            myPanel.add(peselInput);
-	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-	            myPanel.add(new JLabel("Adres:"));
-	            myPanel.add(adresInput);
-	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
+
+				myPanel.add(Box.createVerticalStrut(15)); // a spacer
+				myPanel.add(new JLabel("Miasto:"));
+				myPanel.add(adresMiasto);
+				myPanel.add(Box.createVerticalStrut(15)); // a spacer
+				myPanel.add(new JLabel("Kod Pocztowy:"));
+				myPanel.add(adresKod);
+				myPanel.add(Box.createVerticalStrut(15)); // a spacer
+				myPanel.add(new JLabel("Ulica:"));
+				myPanel.add(adresUlica);
+				myPanel.add(Box.createVerticalStrut(15)); // a spacer
+				myPanel.add(new JLabel("Brama:"));
+				myPanel.add(adresBudynek);
+				myPanel.add(Box.createVerticalStrut(15)); // a spacer
+				myPanel.add(new JLabel("Lokal:"));
+				myPanel.add(adresLokal);
+
 	            myPanel.add(new JLabel("e-mail:"));
 	            myPanel.add(emailInput);
-	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
 	            myPanel.add(new JLabel("telefon:"));
 	            myPanel.add(telefonInput);
-	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-	            myPanel.add(new JLabel("has³o:"));
+	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("hasï¿½o:"));
 	            myPanel.add(hasloInput);
-	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-	            myPanel.add(new JLabel("imiê:"));
+	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("imiï¿½:"));
 	            myPanel.add(imieInput);
-	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-	            myPanel.add(new JLabel("drugie imiê:"));
+	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
+	            myPanel.add(new JLabel("drugie imiï¿½:"));
 	            myPanel.add(imie2Input);
-	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
 	            myPanel.add(new JLabel("nazwisko:"));
 	            myPanel.add(nazwiskoInput);
-	            myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
 
 	            int result = JOptionPane.showConfirmDialog(null, myPanel, 
 	                     "Please Enter X and Y Values", JOptionPane.OK_CANCEL_OPTION);
 	            if (result == JOptionPane.OK_OPTION) {
-	               // nowy wpis do klientów, getTextField
-	            	//TODO BM
+					try{
+						DbConnector.executeQuery("INSERT INTO Email VALUES (DEFAULT, \""+emailInput.getText()+"\");");
+						DbConnector.executeQuery("INSERT INTO nrTelefonu VALUES (DEFAULT, \""+telefonInput.getText()+"\");");
+						DbConnector.executeQuery("INSERT INTO Adres VALUES (DEFAULT, \""+adresMiasto.getText()+"\", \""+adresKod.getText()+"\", \""+adresUlica.getText()+"\", \""+adresBudynek.getText()+"\", \""+adresLokal.getText()+"\");");
+						String sha256hex = org.apache.commons.codec.digest.DigestUtils.sha256Hex(hasloInput.getText());
+						System.out.println("Hash hasla: "+sha256hex);
+						DbConnector.executeQuery("INSERT INTO HasheHasel VALUES (DEFAULT, \""+sha256hex+"\");");
+
+						ResultSet resultSet1 = DbConnector.executeSelectQuery("SELECT IDmail FROM Email ORDER BY IDmail DESC LIMIT 1;");
+						ResultSet resultSet2 = DbConnector.executeSelectQuery("SELECT IDnumeru FROM nrTelefonu ORDER BY IDnumeru DESC LIMIT 1;");
+						ResultSet resultSet3 = DbConnector.executeSelectQuery("SELECT IDhasla FROM HasheHasel ORDER BY IDhasla DESC LIMIT 1;");
+						ResultSet resultSet4 = DbConnector.executeSelectQuery("SELECT IDadresu FROM Adres ORDER BY IDadresu DESC LIMIT 1;");
+
+						resultSet1.next();
+						resultSet2.next();
+						resultSet3.next();
+						resultSet4.next();
+
+						String IDmail = resultSet1.getString("IDmail");
+						String IDnumeru = resultSet2.getString("IDnumeru");
+						String IDhasla = resultSet3.getString("IDhasla");
+						String IDAdresu = resultSet4.getString("IDadresu");
+
+						DbConnector.executeQuery("INSERT INTO Klient VALUES (\""+peselInput.getText()+"\", "+IDAdresu+", "+IDnumeru+", "+IDmail+", "+IDhasla+", \""+imieInput.getText()+"\", "+(imie2Input.getText().equals("")?"NULL":("\""+imie2Input.getText()+"\""))+", \""+nazwiskoInput.getText()+"\");");
+
+					}catch(SQLException e2){
+						e2.printStackTrace();
+					}
+
 	            }
 	        }
 	    });
@@ -137,12 +188,27 @@ public class MenuPracownik {
 	    });
 	   mojeKonto.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
-	        	//TODO BM zapisaæ dane pracownika do zmiennych ni¿ej SELECT na pracownikach
-	        	String imie = "SampleName";
-	        	String nazwisko = "SampleSurname";
-	        	String imie2 = "Andrzej";
+				String imie = "SampleName";
+				String nazwisko = "SampleSurname";
+				String imie2 = "SampleSecondName";
+
+				try{
+					ResultSet resultSet = DbConnector.executeSelectQuery("SELECT Imie, Imie2, Nazwisko FROM Pracownik WHERE IDpracownika="+idPracownika+";");
+					while(resultSet.next()) {
+						imie = resultSet.getString("Imie");
+						nazwisko = resultSet.getString("Nazwisko");
+						imie2 = resultSet.getString("Imie2");
+						if(resultSet.wasNull()){
+							imie2 = "";
+						}
+					}
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
+
+				System.out.println("idprzcownika: "+idPracownika);
 	        	
-	        	String toSee = "ID Pracownika "+idPracownika  + " Imiê " + imie + " Drugie Imiê " + imie2 + " Nazwisko " + nazwisko;
+	        	String toSee = "ID Pracownika "+idPracownika  + " Imiï¿½ " + imie + " Drugie Imiï¿½ " + imie2 + " Nazwisko " + nazwisko;
         		JOptionPane.showMessageDialog(fMP, toSee);
 
 	        }

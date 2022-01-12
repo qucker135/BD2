@@ -149,9 +149,10 @@ public class KatalogPracownik {
 	            int oldAm=-1;
 	            while(am<0) {
 	            try {
+					oldAm = Integer.parseInt(dtm.getValueAt(jt.getSelectedRow(), 4).toString());
+					amS=JOptionPane.showInputDialog(tmp, "Zmiana Iloï¿½ci", dtm.getValueAt(jt.getSelectedRow(), 4));
 	            } catch (NumberFormatException e2) {
-	            	oldAm = Integer.parseInt(dtm.getValueAt(jt.getSelectedRow(), 4).toString());
-		            amS=JOptionPane.showInputDialog(tmp, "Zmiana Iloï¿½ci", dtm.getValueAt(jt.getSelectedRow(), 4));
+	            	e2.printStackTrace();
 	            }
 	            am=Integer.parseInt(amS);
 	            }
@@ -159,8 +160,9 @@ public class KatalogPracownik {
 	            float cost=-1;
 	            while(cost<0) {
 	            try {
+					costS=JOptionPane.showInputDialog(tmp, "Zmiana ceny", dtm.getValueAt(jt.getSelectedRow(), 2));
 	            } catch (NumberFormatException e2) {
-		            costS=JOptionPane.showInputDialog(tmp, "Zmiana ceny", dtm.getValueAt(jt.getSelectedRow(), 2));
+		            e2.printStackTrace();
 	            }
 	            cost=Float.parseFloat(costS);
 	            }
@@ -227,19 +229,17 @@ public class KatalogPracownik {
 					if(oldAm==-1) {
 						System.out.println("Edit - amount error");
 					}else {
-					if(oldAm>am) { // zmniejszyliœmy iloœæ prod
+					if(oldAm>am) { // zmniejszyliï¿½my iloï¿½ï¿½ prod
 						int dif = oldAm - am;
-						for(int i=0; i<dif; i++) {
-							//Delete from egzemplarz where produkt.idproduktu = idproduktu, czyDostepny ==1, limit 1; 
-						}
-						
-					}else if(am>oldAm) { //zwiêkszyliœmy iloœæ prod
+
+						DbConnector.executeQuery("DELETE FROM Egzemplarz WHERE ProduktIDproduktu="+idProduktu+" AND czyDostepne=1 LIMIT "+dif+";");
+
+					}else if(am>oldAm) { //zwiï¿½kszyliï¿½my iloï¿½ï¿½ prod
 						int dif = am - oldAm;
 						for(int i=0; i<dif; i++) {
 							//INSERT INTO Egzemplarz VALUES (DEFAULT, /*idProduktu*/, rand(), 1)
-
+							DbConnector.executeQuery("INSERT INTO Egzemplarz VALUES (DEFAULT, "+idProduktu+", ROUND(RAND() * POWER(2,30)) ,1);");
 						}
-						//Wazne, tutaj bd wyskakiwal error, bo czy egzemplarz nie jest w mock data zwiazany z dostepne produkty
 					}}
 	        }}
 	    });

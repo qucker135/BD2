@@ -3,6 +3,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -159,10 +161,26 @@ public class koszyk {
 	     	    //w tabeli Produkty zmniejszamy ilo�� dost�pnych o ilo�� kupionych
 
 				//SELECT AdresIDAdresu FROM Klient WHERE Klient.PESEL = /*PESEL*/
-				//SELECT EMailIDEmail FROM Klient WHERE Klient.PESEL = /*PESEL*/
+				//SELECT EmailIDEmail FROM Klient WHERE Klient.PESEL = /*PESEL*/
 				//SELECT nrTelefonu FROM Klient WHERE Klient.PESEL = /*PESEL*/ - jedno zapytanie
 
 
+				String AdresIDAdresu = "";
+				String EmailIDmail = "";
+				String nrTelefonuIDnumeru = "";
+
+				try{
+					ResultSet resultSetAuxSelect = DbConnector.executeSelectQuery("SELECT AdresIDadresu, EmailIDmail, nrTelefonuIDnumeru FROM Klient WHERE Klient.PESEL=\""+PESEL+"\";");
+					resultSetAuxSelect.next();
+					AdresIDAdresu = resultSetAuxSelect.getString("AdresIDadresu");
+					EmailIDmail = resultSetAuxSelect.getString("EmailIDmail");
+					nrTelefonuIDnumeru = resultSetAuxSelect.getString("nrTelefonuIDnumeru");
+
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
+
+				System.out.println(AdresIDAdresu+";"+EmailIDmail+"&"+nrTelefonuIDnumeru);
 
 				//Transakcja - INSERT
 				//PESEL - arg
