@@ -32,15 +32,13 @@ public class introLogin {
     f.setSize(1800, 1049);
     f.setResizable(false);
 
-    
-
     JButton klient = new JButton("");
-    klient.setBounds(350, 490, 290, 100);
+    klient.setBounds(567, 645, 265, 93);
     klient.setOpaque(false);
     klient.setContentAreaFilled(false);
     klient.setBorderPainted(true);
     JButton pracownik = new JButton("");
-    pracownik.setBounds(710, 490, 290, 100);
+    pracownik.setBounds(567+363, 645+1, 278, 90);
     pracownik.setOpaque(false);
     pracownik.setContentAreaFilled(false);
     pracownik.setBorderPainted(true);

@@ -12,7 +12,7 @@ public class DbConnector {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(URL, USER, PASS);
-            System.out.println("Połączono");
+            //System.out.println("Połączono");
         }
         catch(SQLException e){
             e.printStackTrace();

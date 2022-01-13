@@ -63,7 +63,7 @@ public class KatalogPracownik {
 	    
 	    kategoria.setOpaque(false);
 	    
-	    String column[]={"idProduktu", "Produkt", "Cena", "Promocja", "Dost�pne sztuki", "Kategoria"};
+	    String column[]={"idProduktu", "Produkt", "Cena", "Promocja", "Dostępne sztuki", "Kategoria"};
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);
@@ -115,7 +115,7 @@ public class KatalogPracownik {
 	    spinner.setBounds(500, 150, 40, 40);
 	    
 	    
-	    back = new JButton("POWR�T", bBG);
+	    back = new JButton("POWRÓT", bBG);
 	    back.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    back.setBounds(500, 500, 240, 30);
 	    back.setContentAreaFilled(false);
@@ -139,18 +139,18 @@ public class KatalogPracownik {
 		    	if(jt.getSelectedRow()== -1) {
 	        		JOptionPane.showMessageDialog(fKA, "Wybierz wiersz");
 
-	        	//System.out.println(jt.getSelectedRow());
+
 		    	}else {
 	        	JFrame tmp = new JFrame();
 	            String name=JOptionPane.showInputDialog(tmp, "Zmiana nazwy", dtm.getValueAt(jt.getSelectedRow(), 1));
 	           // String name=JOptionPane.showInputDialog(tmp,"Wpisz Nazw�");  
-	            String amS=JOptionPane.showInputDialog(tmp, "Zmiana Ilo�ci", dtm.getValueAt(jt.getSelectedRow(), 4));
+	            String amS=JOptionPane.showInputDialog(tmp, "Zmiana Ilości", dtm.getValueAt(jt.getSelectedRow(), 4));
 	            int am=-1;
 	            int oldAm=-1;
 	            while(am<0) {
 	            try {
 					oldAm = Integer.parseInt(dtm.getValueAt(jt.getSelectedRow(), 4).toString());
-					amS=JOptionPane.showInputDialog(tmp, "Zmiana Ilo�ci", dtm.getValueAt(jt.getSelectedRow(), 4));
+					amS=JOptionPane.showInputDialog(tmp, "Zmiana Ilości", dtm.getValueAt(jt.getSelectedRow(), 4));
 	            } catch (NumberFormatException e2) {
 	            	e2.printStackTrace();
 	            }
@@ -166,7 +166,7 @@ public class KatalogPracownik {
 	            }
 	            cost=Float.parseFloat(costS);
 	            }
-	            System.out.print(cost);
+
 	            String op=JOptionPane.showInputDialog(tmp, "Zmiana Opisu");
 
 
@@ -187,7 +187,7 @@ public class KatalogPracownik {
 	                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,
 	                    options[0]);
 	            String kategoria = kat.getSelectedItem().toString();
-	            System.out.print(kategoria);
+
 
 	            JComboBox prom = new JComboBox();
 
@@ -206,7 +206,7 @@ public class KatalogPracownik {
 	                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,
 	                    options[0]);
 	            String promocja = prom.getSelectedItem().toString();
-	            System.out.print(promocja);
+
 	            
 	            //"IDproduktu","Nazwa", "Cena", "Promocja", "Dost�pne sztuki", "Kategoria"
 	            //TODO FS - poprawic kolumny
@@ -227,7 +227,7 @@ public class KatalogPracownik {
 						e2.printStackTrace();
 					}
 					if(oldAm==-1) {
-						System.out.println("Edit - amount error");
+						System.err.println("Edit - amount error");
 					}else {
 					if(oldAm>am) { // zmniejszyli�my ilo�� prod
 						int dif = oldAm - am;
@@ -243,7 +243,7 @@ public class KatalogPracownik {
 					}}
 	        }}
 	    });
-	    delete = new JButton("USU�", bBGd);
+	    delete = new JButton("USUŃ", bBGd);
 	    delete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    delete.setBounds(500, 400, 240, 30);
 	    delete.setContentAreaFilled(false);
@@ -279,26 +279,25 @@ public class KatalogPracownik {
 	        public void actionPerformed(ActionEvent e) {
 	        	//kategoria, nazwa, sztuki, cena, opis
 	        	JFrame tmp = new JFrame();
-	            String name=JOptionPane.showInputDialog(tmp,"Wpisz Nazw�");  
-	            String amS=JOptionPane.showInputDialog(tmp,"Wpisz Ilo��");
+	            String name=JOptionPane.showInputDialog(tmp,"Wpisz Nazwę");
+	            String amS=JOptionPane.showInputDialog(tmp,"Wpisz Ilość");
 	            int am=-1;
 	            while(am==-1) {
 	            try {
 	            am=Integer.parseInt(amS);
 	            } catch (NumberFormatException e2) {
-		            amS=JOptionPane.showInputDialog(tmp,"Wpisz Ilo��");
+		            amS=JOptionPane.showInputDialog(tmp,"Wpisz Ilość");
 	            }
 	            }
-	            String costS=JOptionPane.showInputDialog(tmp,"Wpisz cen�");
+	            String costS=JOptionPane.showInputDialog(tmp,"Wpisz cenę");
 	            int cost=-1;
 	            while(cost==-1) {
 	            try {
 	            cost=Integer.parseInt(costS);
 	            } catch (NumberFormatException e2) {
-		            costS=JOptionPane.showInputDialog(tmp,"Wpisz Cen�");
+		            costS=JOptionPane.showInputDialog(tmp,"Wpisz Cenę");
 	            }
 	            }
-	            System.out.print(cost);
 	            String op=JOptionPane.showInputDialog(tmp,"Wpisz opis");
 
 				JComboBox kat = new JComboBox();
@@ -319,7 +318,7 @@ public class KatalogPracownik {
 	                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,
 	                    options[0]);
 	            String kategoria = kat.getSelectedItem().toString();
-	            System.out.print(kategoria);
+
 
 	            JComboBox prom = new JComboBox();
 
@@ -338,7 +337,7 @@ public class KatalogPracownik {
 	                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options,
 	                    options[0]);
 	            String promocja = prom.getSelectedItem().toString();
-	            System.out.print(promocja);
+
 	            
 	            //"Nazwa", "Cena", "Promocja", "Dost�pne sztuki", "Kategoria"
 	           // idProduktu", "Produkt", "Cena", "Promocja", "Dost�pne sztuki", "Kategoria"
@@ -360,7 +359,7 @@ public class KatalogPracownik {
 					}
 
 					String idPromocji = prom.getSelectedItem().toString().split(";")[0];
-					System.out.println(idPromocji);
+
 					DbConnector.executeQuery("INSERT INTO PromocjeNaProdukty VALUES (DEFAULT, "+idPromocji+", "+iDproduktu+");");
 
 					Object[] row = {iDproduktu, name, cost, promocja, am, kategoria  };
@@ -378,7 +377,6 @@ public class KatalogPracownik {
 	    fKA.add(delete);
 	    fKA.add(spinner);
 	    fKA.add(p);
-	    System.out.println("myk");
 	    fKA.add(kategoria);
 	    fKA.pack();
 	    fKA.setVisible(true);

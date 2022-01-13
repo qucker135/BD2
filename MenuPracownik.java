@@ -89,18 +89,18 @@ public class MenuPracownik {
 	            
 	            JTextField peselInput = new JTextField(11);
 
-				JTextField adresMiasto = new JTextField(50);
-				JTextField adresKod = new JTextField(6);
-				JTextField adresUlica = new JTextField(50);
-				JTextField adresBudynek = new JTextField(10);
-				JTextField adresLokal = new JTextField(10);
+				JTextField adresMiasto = new JTextField(8); //50
+				JTextField adresKod = new JTextField(6); //6
+				JTextField adresUlica = new JTextField(8); //50
+				JTextField adresBudynek = new JTextField(2); //10
+				JTextField adresLokal = new JTextField(2); //10
 
-	            JTextField emailInput = new JTextField(49);
-	            JTextField telefonInput = new JTextField(9);
-	            JTextField hasloInput = new JTextField(20);
-	            JTextField imieInput = new JTextField(15);
-	            JTextField imie2Input = new JTextField(15);
-	            JTextField nazwiskoInput = new JTextField(25);
+	            JTextField emailInput = new JTextField(8); //49
+	            JTextField telefonInput = new JTextField(9); //9
+	            JTextField hasloInput = new JTextField(8); //20
+	            JTextField imieInput = new JTextField(8); //15
+	            JTextField imie2Input = new JTextField(8); //15
+	            JTextField nazwiskoInput = new JTextField(8); //25
 
 	            JPanel myPanel = new JPanel();
 	            myPanel.add(new JLabel("PESEL:"));
@@ -129,10 +129,10 @@ public class MenuPracownik {
 	            myPanel.add(new JLabel("telefon:"));
 	            myPanel.add(telefonInput);
 	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
-	            myPanel.add(new JLabel("has�o:"));
+	            myPanel.add(new JLabel("hasło:"));
 	            myPanel.add(hasloInput);
 	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
-	            myPanel.add(new JLabel("imi�:"));
+	            myPanel.add(new JLabel("imię:"));
 	            myPanel.add(imieInput);
 	            myPanel.add(Box.createVerticalStrut(15)); // a spacer
 	            myPanel.add(new JLabel("drugie imi�:"));
@@ -150,7 +150,7 @@ public class MenuPracownik {
 						DbConnector.executeQuery("INSERT INTO nrTelefonu VALUES (DEFAULT, \""+telefonInput.getText()+"\");");
 						DbConnector.executeQuery("INSERT INTO Adres VALUES (DEFAULT, \""+adresMiasto.getText()+"\", \""+adresKod.getText()+"\", \""+adresUlica.getText()+"\", \""+adresBudynek.getText()+"\", \""+adresLokal.getText()+"\");");
 						String sha256hex = org.apache.commons.codec.digest.DigestUtils.sha256Hex(hasloInput.getText());
-						System.out.println("Hash hasla: "+sha256hex);
+
 						DbConnector.executeQuery("INSERT INTO HasheHasel VALUES (DEFAULT, \""+sha256hex+"\");");
 
 						ResultSet resultSet1 = DbConnector.executeSelectQuery("SELECT IDmail FROM Email ORDER BY IDmail DESC LIMIT 1;");
@@ -205,10 +205,8 @@ public class MenuPracownik {
 				}catch(SQLException e2){
 					e2.printStackTrace();
 				}
-
-				System.out.println("idprzcownika: "+idPracownika);
 	        	
-	        	String toSee = "ID Pracownika "+idPracownika  + " Imi� " + imie + " Drugie Imi� " + imie2 + " Nazwisko " + nazwisko;
+	        	String toSee = "ID Pracownika "+idPracownika  + " Imię " + imie + " Drugie Imię " + imie2 + " Nazwisko " + nazwisko;
         		JOptionPane.showMessageDialog(fMP, toSee);
 
 	        }

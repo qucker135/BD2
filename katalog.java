@@ -80,7 +80,7 @@ public class katalog {
 	    
 	    kategoria.setOpaque(false);
 	    
-	    String column[]={"ID Produktu", "Nazwa", "Cena", "Promocja", "Dostï¿½pne sztuki"};
+	    String column[]={"ID Produktu", "Nazwa", "Cena", "Promocja", "DostÄ™pne sztuki"};
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);    
@@ -92,21 +92,21 @@ public class katalog {
 				String nazwa = resultSet.getString("Nazwa");
 				String cena = resultSet.getString("Cena");
 				String sztukiBefore = resultSet.getString("Sztuki");
-				//sekcja zabezpieczaj¹ca przed prze³adowaniem koszyka
+				//sekcja zabezpieczajï¿½ca przed przeï¿½adowaniem koszyka
 				Integer sztukiTMP = 0;
 				  try {
 						sztukiTMP = Integer.parseInt(sztukiBefore);
 					  } catch (NumberFormatException e) {
-					    System.out.println("sztuki z bazy danych to nie integer");
+					    System.err.println("sztuki z bazy danych to nie integer");
 					  }
 				  Integer takenProducts = 0;
-				 ArrayList<String[]> tmp = koszykObj.getKoszyk(); //id, nazwa, iloœæ, cena
+				 ArrayList<String[]> tmp = koszykObj.getKoszyk(); //id, nazwa, iloï¿½ï¿½, cena
 				for(int iterator =0; iterator < tmp.size(); iterator++) {
 					if(tmp.get(iterator)[0]==idProduktu) {
 						try {
 						takenProducts = Integer.parseInt(tmp.get(iterator)[2]);
 						  } catch (NumberFormatException e) {
-							    System.out.println("sztuki z koszyka to nie integer");
+							    System.err.println("sztuki z koszyka to nie integer");
 						}
 					}
 				}
@@ -137,7 +137,7 @@ public class katalog {
 	    max = 10;//podepnij do bazy
 
 		try{
-			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT COUNT(*) AS Liczba FROM Produkt;");//TODO BM, chyba zasn¹³em, SELECT dostepne sztuki ... where idProduktu = get value At(get selected row, 0)
+			ResultSet resultSet = DbConnector.executeSelectQueryToConnection(connection, "SELECT COUNT(*) AS Liczba FROM Produkt;");//TODO BM, chyba zasnï¿½ï¿½em, SELECT dostepne sztuki ... where idProduktu = get value At(get selected row, 0)
 			resultSet.next();
 			String maxAsText = resultSet.getString("Liczba");
 			max = parseInt(maxAsText);
@@ -157,7 +157,7 @@ public class katalog {
 	    dodaj.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	if(spinner.getValue().toString()=="0") {
-	        		JOptionPane.showMessageDialog(fKA, "Nie moï¿½esz dodaï¿½ 0 produktï¿½w!");
+	        		JOptionPane.showMessageDialog(fKA, "Nie moÅ¼esz dodaÄ‡ 0 produktÃ³w!");
 	        	}else {
         		jt.getSelectedRow();
         		spinner.getValue();
@@ -173,7 +173,7 @@ public class katalog {
 	        	}
 	    });
 	    
-	    back = new JButton("POWRï¿½T", bBG);
+	    back = new JButton("POWRÃ“T", bBG);
 	    back.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    back.setBounds(500, 400, 240, 30);
 	    back.setContentAreaFilled(false);
@@ -191,8 +191,7 @@ public class katalog {
 	    fKA.add(back);
 	    fKA.add(spinner);
 	    fKA.add(dodaj);
-	    fKA.add(p);          
-	    System.out.println("myk");
+	    fKA.add(p);
 	    fKA.add(kategoria);
 	    fKA.pack();
 	    fKA.setVisible(true);

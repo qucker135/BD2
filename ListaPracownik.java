@@ -93,7 +93,7 @@ public class ListaPracownik {
 	    nrZam = new JTextField();
 	    nrZam.setText(numerZBD);
 	    
-	    back = new JButton("POWR�T", bBG);
+	    back = new JButton("POWRÓT", bBG);
 	    back.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    back.setBounds(500, 400, 240, 30);
 	    back.setContentAreaFilled(false);
@@ -114,8 +114,6 @@ public class ListaPracownik {
 	        	paragony.getSelectedItem();//paragon
 	        	dtm.getDataVector().removeAllElements();
 				try{
-					System.out.println((String)paragony.getSelectedItem());
-					System.out.println(((String)paragony.getSelectedItem()).split(";")[0]);
 					ResultSet resultSet2 = DbConnector.executeSelectQuery("SELECT NrEgzemplarzaWTransakcji.nrSeryjny AS nrSeryjny, NrEgzemplarzaWTransakcji.finalnaCena AS Cena, Produkt.Nazwa AS Produkt FROM NrEgzemplarzaWTransakcji, Egzemplarz, Produkt WHERE Produkt.IDproduktu=Egzemplarz.ProduktIDproduktu AND NrEgzemplarzaWTransakcji.EgzemplarzIDserii=Egzemplarz.nrSeryjny AND NrEgzemplarzaWTransakcji.TransakcjaIDtransakcji = "+((String)paragony.getSelectedItem()).split(";")[0]+";");
 					while(resultSet2.next()) {
 						String Produkt = resultSet2.getString("Produkt");

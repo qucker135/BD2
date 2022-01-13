@@ -45,8 +45,7 @@ public class MenuKlient {
 		fMK.setResizable(false);
 	    
 	    if(null == maybeObject) {
-	        koszykObj = new koszyk(); //koszyk jest trzymany na ca³¹ sesjê
-	        System.out.println("nowy koszyk");
+	        koszykObj = new koszyk(); //koszyk jest trzymany na cala sesje
 	    }else {
 	    	koszykObj = maybeObject;
 	    }

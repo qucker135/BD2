@@ -62,8 +62,7 @@ public class ListaKlient {
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
-	    
-	    System.out.println("tralalala");
+
 	    String column[]={"Produkt","nrSeryjny","Cena"};
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
@@ -105,7 +104,7 @@ public class ListaKlient {
 	    p.setBackground(Color.white);
 	    p.add(sp);
 
-	    back = new JButton("POWR�T", bBG);
+	    back = new JButton("POWRÓT", bBG);
 	    back.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    back.setBounds(500, 400, 240, 30);
 	    back.setContentAreaFilled(false);

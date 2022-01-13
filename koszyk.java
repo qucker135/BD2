@@ -66,16 +66,14 @@ public class koszyk {
 		fK.setSize(751, 650);
 		fK.setResizable(false);
 	    
-	    String column[]={"idProduktu", "Produkt","Ilo��","Cena" };
+	    String column[]={"idProduktu", "Produkt","Ilość","Cena" };
 	    DefaultTableModel dtm=new DefaultTableModel(column,0);
 
 	    JTable jt=new JTable(dtm);
 
         int iterator = 0;
-        System.out.println(rows.size());
 
         while (iterator < rows.size()) {
-            System.out.println(rows.get(iterator));
             dtm.addRow(rows.get(iterator));
             iterator++;
         }
@@ -95,9 +93,9 @@ public class koszyk {
 	    
 	    
 	    
-	    usun = new JButton("USU�", bBG);
+	    usun = new JButton("USUŃ", bBG);
 	    kup = new JButton("KUP", bBG);
-	    back = new JButton("POWR�T", bBG);
+	    back = new JButton("POWRÓT", bBG);
 
 	    usun.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 	    kup.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -108,8 +106,8 @@ public class koszyk {
 	    back.setBounds(5, 50, 240, 30);
 
 	    
-	    imie = new JTextField("imi�");
-	    imie2 = new JTextField("drugie imi�");
+	    imie = new JTextField("imię");
+	    imie2 = new JTextField("drugie imię");
 	    nazwisko = new JTextField("nazwisko");
 	    kod = new JTextField("kod pocztowy");
 	    miasto = new JTextField("miasto");
@@ -168,6 +166,8 @@ public class koszyk {
 				String AdresIDAdresu = "";
 				String EmailIDmail = "";
 				String nrTelefonuIDnumeru = "";
+				int liczba_pracownikow = 1;
+
 
 				try{
 					ResultSet resultSetAuxSelect = DbConnector.executeSelectQuery("SELECT AdresIDadresu, EmailIDmail, nrTelefonuIDnumeru FROM Klient WHERE Klient.PESEL=\""+PESEL+"\";");
@@ -176,36 +176,131 @@ public class koszyk {
 					EmailIDmail = resultSetAuxSelect.getString("EmailIDmail");
 					nrTelefonuIDnumeru = resultSetAuxSelect.getString("nrTelefonuIDnumeru");
 
+					ResultSet rs_liczaPracownikow = DbConnector.executeSelectQuery("SELECT COUNT(*) AS Liczba FROM Pracownik;");
+					rs_liczaPracownikow.next();
+					liczba_pracownikow = Integer.parseInt(rs_liczaPracownikow.getString("Liczba"));
+
 				}catch(SQLException e2){
 					e2.printStackTrace();
 				}
 
-				System.out.println(AdresIDAdresu+";"+EmailIDmail+"&"+nrTelefonuIDnumeru);
+				//System.out.println(AdresIDAdresu+";"+EmailIDmail+"&"+nrTelefonuIDnumeru);
+
+				DbConnector.executeQuery("INSERT INTO Transakcja VALUES (DEFAULT, \""+PESEL+"\", 1, ROUND(RAND()*"+liczba_pracownikow+")+1, "+AdresIDAdresu+", "+EmailIDmail+", "+nrTelefonuIDnumeru+", 0, NOW(), 1, 0);");
 
 				//Transakcja - INSERT
 				//PESEL - arg
 				//STATUS - 1
 				//Pracownik - rand()
-				//nrParagonu - idTransakcji + 12losowaych bitow
+				//nrParagonu - idTransakcji + 9losowaych bitow -- DO UPDATU
 				//datoczasZakupu - NOW()
 				//czyOplacono - 1
-				//lacznaCena - 0
+				//lacznaCena - 0 -- DO UPDATU
 
 				//UPDATE TRanskacji - (ustalenie nrParagonu na podstwie ostatniego IDTransakcji)
 
+				/*
+
+				int IDostatniejTransakcji = 10;
+
+				try{
+					ResultSet resultSetAuxSelect = DbConnector.executeSelectQuery("SELECT IDtransakcji FROM Transakcja ORDER BY IDtransakcji DESC LIMIT 1;");
+					resultSetAuxSelect.next();
+					IDostatniejTransakcji = Integer.parseInt(resultSetAuxSelect.getString("IDtransakcji"));
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
+
+				DbConnector.executeQuery("UPDATE Transakcja SET nrParagonu="+IDostatniejTransakcji+"*POWER(2,9) + ROUND(RAND() * POWER(2,9)) WHERE IDtransakcji="+IDostatniejTransakcji+";");
+
+				String nrParagonu = "1000";
+
+				try{//SELECT W CELU ustalenia nrParagonu
+					ResultSet resultSetAuxSelect = DbConnector.executeSelectQuery("SELECT nrParagonu FROM Transakcja ORDER BY IDtransakcji DESC LIMIT 1;");
+					resultSetAuxSelect.next();
+					nrParagonu = resultSetAuxSelect.getString("nrParagonu");
+				}catch(SQLException e2){
+					e2.printStackTrace();
+				}
+
 				//petla{
+
+				int liczba_egzemplarzy = 0;
+
+				double lacznaCena = 0.0;
+
+				for(int i=0; i<jt.getRowCount();i++){
+					liczba_egzemplarzy = Integer.parseInt((String)dtm.getValueAt(i, 2));
+
+					int IDproduktu = Integer.parseInt((String)dtm.getValueAt(i, 0));
+
+					double wartoscPromocji = 0.00;
+
+					double CenaBrutto = 100.0;
+
+					try{//SELECT W CELU ustalenia maksymalnej promocji
+						ResultSet resultSetAuxSelect = DbConnector.executeSelectQuery("SELECT MAX(Promocja.Wartosc) AS Wartosc FROM Promocja, PromocjeNaProdukty, Produkt WHERE Promocja.IDPromocji=PromocjeNaProdukty.PromocjaIDpromocji AND PromocjeNaProdukty.ProduktIDproduktu = "+IDproduktu+";");
+
+						resultSetAuxSelect.next();
+						wartoscPromocji += Double.parseDouble(resultSetAuxSelect.getString("Wartosc"));
+
+						ResultSet resultSetCenaBrutto = DbConnector.executeSelectQuery("SELECT Cena FROM Produkt WHERE IDproduktu="+IDproduktu+";");
+
+						resultSetCenaBrutto.next();
+						CenaBrutto = Double.parseDouble(resultSetCenaBrutto.getString("Cena"));
+
+					}catch(SQLException e2){
+						e2.printStackTrace();
+					}
+
+					double finalnaCenaProduktu = CenaBrutto * (1.0-wartoscPromocji);
+
+					for(int j=0; j<liczba_egzemplarzy;j++){
+
+						String IDserii = "";
+						String nrSeryjny = "";
+
+						try{//SELECT W CELU ustalenia IDserii
+							ResultSet resultSetAuxSelect = DbConnector.executeSelectQuery("SELECT IDserii, nrSeryjny FROM Egzemplarz WHERE ProduktIDproduktu = "+IDproduktu+" AND czyDostepne=1 LIMIT 1;");
+							System.out.println(IDproduktu);
+							resultSetAuxSelect.next();
+							IDserii = resultSetAuxSelect.getString("IDserii");
+							nrSeryjny = resultSetAuxSelect.getString("nrSeryjny");
+						}catch(SQLException e2){
+							e2.printStackTrace();
+						}
+
+						DbConnector.executeQuery("INSERT INTO NrEgzemplarzaWTransakcji VALUES (DEFAULT, "+IDostatniejTransakcji+", "+IDserii+", "+nrParagonu+", "+nrSeryjny+", "+finalnaCenaProduktu+");");
+
+						lacznaCena += finalnaCenaProduktu;
+
+						//ustawienie czydostepne na zero where Egzemplarz.IDserii = idserii
+						DbConnector.executeQuery("UPDATE Egzemplarz SET czyDostepne=0 WHERE IDserii="+IDserii+";");
+
+
+					}
+
+					//UPDATE Produktu - zmniejszenie ilosci
+
+					DbConnector.executeQuery("UPDATE Produkt SET DostepneSztuki=DostepneSztuki-"+liczba_egzemplarzy+" WHERE IDproduktu="+IDproduktu+";");
+				}
+
+
 
 				//NrEgzemplarza w transakcji - (petla)
 				//IDtransakcji - SELECT*FROM get lAST of Transkacja
-				//EgzemplarzIDserii - SELECT Egzemplarz.IDSerii FROM egzemplarz WHERE Produkt.IDProduktu = /*ProduktID - dziwne iterowanie po JTable*/ AND czyDostepne = 1 LIMIT 1
+				//EgzemplarzIDserii - SELECT Egzemplarz.IDSerii FROM egzemplarz WHERE Produkt.IDProduktu = ProduktID - dziwne iterowanie po JTable AND czyDostepne = 1 LIMIT 1
 				//nrParagonu - idTransakcji + 12losowaych bitow
 				//nrSeryjny - SELECT na podstawie EgzemplarzIDserii
 				//finalna cena - SELECT cena from produkt (produktID mamy)
-				//i jeszcze select do promocji
+				//i jeszcze select do promocji -- w celu policzenia finalnej ceny
 
-				//UPDATE Egzemplarza - wyzerowanie dostepnosci
 
-				//UPDATE Produktu - zmniejszenie ilosci
+				//UPDATE lacznaCeny w Transkacji
+				DbConnector.executeQuery("UPDATE Transakcja SET lacznaCena="+lacznaCena+" WHERE IDtransakcji="+IDostatniejTransakcji+";");
+
+				*/
+
 
 				//}end-petla
 	        }
@@ -242,7 +337,6 @@ public class koszyk {
 	}
 	public void addToBasket(String[] row) {
 		rows.add(row);
-		System.out.println("Dodano");
 		return;
 	}
 	

@@ -27,7 +27,7 @@ import java.sql.SQLException;
 public class SecondLogin {
 	
     static JTextField login;
-    static JTextField passwd;
+    static JPasswordField passwd;
     
     static JButton zaloguj;
     
@@ -52,22 +52,23 @@ public class SecondLogin {
 	        e.printStackTrace();
 	    }
 	    login = new JTextField();
-	    login.setBounds(392, 270, 420, 65);
-	    
+	    login.setBounds(402, 330, 410, 51); //392, 270, 420, 65
+
 	    //login.setOpaque(false);
-	    passwd = new JTextField();
-	    passwd.setBounds(392, 350, 420, 65);
+	    passwd = new JPasswordField();
+	    passwd.setBounds(402, 330+79, 410, 50); //392, 350, 420, 65
+		passwd.setEchoChar('*');
 	    
 	    zaloguj = new JButton("");
-	    zaloguj.setBounds(392, 480, 420, 65);
+	    zaloguj.setBounds(402, 330+196, 410, 60);
 	    //zaloguj.setOpaque(false);
 	    zaloguj.setContentAreaFilled(false);
-	    zaloguj.setBorderPainted(false);
+	    zaloguj.setBorderPainted(true);
 	    
 	    zaloguj.addActionListener(new ActionListener() {
 	        public void actionPerformed(ActionEvent e) {
 	        	loginData = login.getText();
-	        	passwdData = passwd.getText();
+				passwdData = String.valueOf(passwd.getPassword());
 				String sha256hex = org.apache.commons.codec.digest.DigestUtils.sha256Hex(passwdData);
 	        	/*
 	        	 * Tutaj trzeba doda� kod, kt�ry b�dzie sprawdza� passy z baz� danych
